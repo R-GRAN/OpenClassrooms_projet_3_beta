@@ -1,5 +1,5 @@
 /* Fonction recuperant les projets de l'API */
-async function fetchProjets() {
+async function getProjets() {
   try {
     const response = await fetch("http://localhost:5678/api/works");
     const data = await response.json();
@@ -10,7 +10,7 @@ async function fetchProjets() {
 }
 
 /* Fonction recuperant les categories de l'API */
-async function fetchCategories() {
+async function getCategories() {
   try {
     const response = await fetch("http://localhost:5678/api/categories");
     const data = await response.json();
@@ -86,7 +86,7 @@ async function initialiserPage() {
   activeBoutons();
 
   try {
-    let projets = await fetchProjets();
+    let projets = await getProjets();
     genererProjets(projets);
   } catch (error) {
     console.log("error", error);
@@ -101,7 +101,7 @@ function resetGallery() {
 /* Fonction filtrant et affichant les projets selon le clic sur les filtres  */
 async function filtrerProjets(evt) {
   try {
-    let projets = await fetchProjets();
+    let projets = await getProjets();
 
     if (evt.target.value === "Tous") {
       resetGallery();
@@ -175,7 +175,7 @@ let modal = null;
 /* Fonction gerant l'ouverture de la modale */
 async function openModal(evt) {
   evt.preventDefault();
-  let projets = await fetchProjets();
+  let projets = await getProjets();
   genererProjetsModal(projets);
   let target = document.querySelector(evt.target.getAttribute("href"));
   target.style.display = null;
@@ -209,7 +209,7 @@ function supprimerProjet(evt) {
       if (!res.ok) {
         (error) => console.log("error", error);
       } else {
-        fetchProjets().then((res) => genererProjetsModal(res));
+        getProjets().then((res) => genererProjetsModal(res));
       }
     });
   } catch (error) {
@@ -282,7 +282,7 @@ async function genererModalAjouter() {
   modal_wrapper_gallery.style.display = "none";
   fileUpload.addEventListener("change", (img) => uploadImg(img));
 
-  let categories = await fetchCategories();
+  let categories = await getCategories();
 
   for (let i = 0; i < categories.length; i++) {
     let categorie = categories[i];
@@ -315,7 +315,7 @@ if (token !== null) {
   const log = document.getElementById("inAndOut");
   log.innerText = "logout";
   log.setAttribute("href", "index.html");
-  log.addEventListener("click", logout());
+  log.addEventListener("click", logout);
 
   const banner = document.getElementById("editor-banner");
   banner.style.display = "flex";
