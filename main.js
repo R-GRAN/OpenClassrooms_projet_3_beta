@@ -1,3 +1,5 @@
+/* ------ Appels API  ------*/
+
 /* Fonction recuperant les projets de l'API */
 async function getProjets() {
   try {
@@ -61,8 +63,36 @@ async function postProjet() {
   }
 }
 
+/* Fonction permettant de supprimer un projet de l'API*/
+function supprimerProjet(evt) {
+  const id = evt.target.dataset.id;
+  const ParsedToken = JSON.parse(token);
+  try {
+    fetch(`http://localhost:5678/api/works/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${ParsedToken.token}` },
+    }).then((res) => {
+      if (!res.ok) {
+        (error) => console.log("error", error);
+      } else {
+        getProjets().then((res) => genererProjetsModal(res));
+      }
+    });
+  } catch (error) {
+    console.log("error", error);
+  }
+}
+
+/* ------  Fin Appels API  ------*/
+
+/* ------  Gestion de contenu ------*/
+
+/* Gallery */
+
 /* Fonction generant la gallery */
-function genererProjets(projets) {
+function genererProjetsGallery(projets) {
+  const sectionGallery = document.querySelector(".gallery");
+
   for (let i = 0; i < projets.length; i++) {
     const projet = projets[i];
 
@@ -74,7 +104,6 @@ function genererProjets(projets) {
 
     const figure = document.createElement("figure");
 
-    const sectionGallery = document.querySelector(".gallery");
     sectionGallery.appendChild(figure);
     figure.appendChild(imageElement);
     figure.appendChild(figcaptionElement);
@@ -84,10 +113,9 @@ function genererProjets(projets) {
 /* Fonction generant la gallery au début du chargement de la page */
 async function initialiserPage() {
   activeBoutons();
-
   try {
     let projets = await getProjets();
-    genererProjets(projets);
+    genererProjetsGallery(projets);
   } catch (error) {
     console.log("error", error);
   }
@@ -97,6 +125,8 @@ async function initialiserPage() {
 function resetGallery() {
   document.querySelector(".gallery").innerHTML = "";
 }
+
+/* Filtres */
 
 /* Fonction filtrant et affichant les projets selon le clic sur les filtres  */
 async function filtrerProjets(evt) {
@@ -117,6 +147,124 @@ async function filtrerProjets(evt) {
     console.log("error", error);
   }
 }
+
+/* Fonction attribuant et gerant le comportement des boutons filtres */
+function activeBoutons() {
+  const btns_filters = document.querySelectorAll(".btn-filters");
+  btns_filters.forEach((btn) =>
+    btn.addEventListener("click", (evt) => {
+      filtrerProjets(evt);
+      document.querySelector(".active").classList.remove("active");
+      btn.classList.add("active");
+    })
+  );
+}
+
+/* Modale */
+
+/* Fonction gerant l'ouverture de la modale */
+async function openModal(evt) {
+  evt.preventDefault();
+  let projets = await getProjets();
+  genererProjetsModal(projets);
+  let target = document.querySelector(evt.target.getAttribute("href"));
+  target.style.display = null;
+  modal = target;
+  modal.addEventListener("click", closeModal);
+  modal.querySelector(".modal-close").addEventListener("click", closeModal);
+  modal
+    .querySelector(".modal-stop")
+    .addEventListener("click", (evt) => evt.stopPropagation());
+}
+
+/* Fonction gerant la fermeture de la modale */
+function closeModal(evt) {
+  if (modal === null) return;
+  evt.preventDefault();
+  modal.style.display = "none";
+  modal = null;
+}
+
+/* Fonction generant l'affichage stade 1 de la modale : Supprimer un projet */
+function genererProjetsModal(projets) {
+  const modal_wrapper_gallery = document.querySelector(
+    ".modal-wrapper-gallery"
+  );
+
+  const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
+  modal_wrapper_form.style.display = "none";
+
+  const modal_wrapper_btn = document.querySelector(".modal-wrapper-btn");
+  modal_wrapper_btn.addEventListener("click", genererModalAjouter);
+
+  modal_wrapper_gallery.innerHTML = "";
+
+  for (let i = 0; i < projets.length; i++) {
+    const projet = projets[i];
+
+    const figureModal = document.createElement("figure");
+
+    const imageElement = document.createElement("img");
+    imageElement.src = projet.imageUrl;
+
+    modal_wrapper_gallery.appendChild(figureModal);
+    figureModal.appendChild(imageElement);
+
+    const poubelle = document.createElement("i");
+    poubelle.dataset.id = projet.id;
+
+    poubelle.addEventListener("click", (evt) => supprimerProjet(evt));
+
+    poubelle.classList.add("fa-solid", "fa-trash-can");
+    figureModal.appendChild(poubelle);
+  }
+}
+
+/* Fonction generant l'affichage stade 2 de la modale : Ajouter un projet */
+async function genererModalAjouter() {
+  const modal_previously = document.querySelector(".modal-previoulsy");
+  const modal_wrapper_title = document.querySelector(".modal-wrapper-title");
+  const modal_wrapper_gallery = document.querySelector(
+    ".modal-wrapper-gallery"
+  );
+  const form_select = document.querySelector(".form-select");
+  const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
+  const fileUpload = document.getElementById("fileUpload");
+
+  modal_previously.style.visibility = "visible";
+  modal_wrapper_title.innerText = "Ajout photo";
+  modal_wrapper_form.style.display = "";
+  modal_wrapper_gallery.style.display = "none";
+  fileUpload.addEventListener("change", (img) => afficherImg(img));
+
+  let categories = await getCategories();
+
+  for (let i = 0; i < categories.length; i++) {
+    let categorie = categories[i];
+
+    let optionElement = document.createElement("option");
+    optionElement.innerText = categorie.name;
+    optionElement.value = categorie.id;
+    form_select.appendChild(optionElement);
+  }
+}
+
+/* Fonction permettant d'afficher l'image du projet à ajouter*/
+function afficherImg(img) {
+  let imgToProcess = img.target.files[0];
+
+  let newImage = new Image();
+  newImage.src = URL.createObjectURL(imgToProcess);
+
+  let display = document.getElementById("uploadedImageDiv");
+  const input_details = document.querySelector(".input-details ");
+  input_details.style.display = "none";
+  display.appendChild(newImage);
+}
+
+/* ------  Fin Gestion de contenu ------*/
+
+/* ------  Gestion Login ------*/
 
 /* Fonction enregistrant le token dans le localStorage */
 function storeToken(data) {
@@ -168,148 +316,16 @@ function logout() {
   localStorage.removeItem("token");
 }
 
-/* Modale */
+/* ------  Fin Gestion Login ------*/
+
+/* Script pour index.html */
 
 let modal = null;
 
-/* Fonction gerant l'ouverture de la modale */
-async function openModal(evt) {
-  evt.preventDefault();
-  let projets = await getProjets();
-  genererProjetsModal(projets);
-  let target = document.querySelector(evt.target.getAttribute("href"));
-  target.style.display = null;
-  modal = target;
-  modal.addEventListener("click", closeModal);
-  modal.querySelector(".modal-close").addEventListener("click", closeModal);
-  modal.querySelector(".modal-stop").addEventListener("click", stopPropagation);
-}
-
-/* Fonction gerant la fermeture de la modale */
-function closeModal(evt) {
-  if (modal === null) return;
-  evt.preventDefault();
-  modal.style.display = "none";
-  modal = null;
-}
-
-function stopPropagation(evt) {
-  evt.stopPropagation();
-}
-
-/* Fonction permettant de supprimer un projet de l'API*/
-function supprimerProjet(evt) {
-  const id = evt.target.dataset.id;
-  const ParsedToken = JSON.parse(token);
-  try {
-    fetch(`http://localhost:5678/api/works/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${ParsedToken.token}` },
-    }).then((res) => {
-      if (!res.ok) {
-        (error) => console.log("error", error);
-      } else {
-        getProjets().then((res) => genererProjetsModal(res));
-      }
-    });
-  } catch (error) {
-    console.log("error", error);
-  }
-}
-
-/* Fonction permettant d'uploader une image */
-function uploadImg(img) {
-  let imgToProcess = img.target.files[0];
-
-  let newImage = new Image();
-  newImage.src = URL.createObjectURL(imgToProcess);
-
-  let display = document.getElementById("uploadedImageDiv");
-  const input_details = document.querySelector(".input-details ");
-  input_details.style.display = "none";
-  display.appendChild(newImage);
-}
-
-/* Fonction generant la gallery de la modale */
-function genererProjetsModal(projets) {
-  const modal_wrapper_gallery = document.querySelector(
-    ".modal-wrapper-gallery"
-  );
-
-  const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
-  modal_wrapper_form.style.display = "none";
-
-  const modal_wrapper_btn = document.querySelector(".modal-wrapper-btn");
-  modal_wrapper_btn.addEventListener("click", genererModalAjouter);
-
-  modal_wrapper_gallery.innerHTML = "";
-
-  for (let i = 0; i < projets.length; i++) {
-    const projet = projets[i];
-
-    const figureModal = document.createElement("figure");
-
-    const imageElement = document.createElement("img");
-    imageElement.src = projet.imageUrl;
-    imageElement.dataset.id = projet.id;
-
-    modal_wrapper_gallery.appendChild(figureModal);
-    figureModal.appendChild(imageElement);
-
-    const poubelle = document.createElement("i");
-
-    figureModal.addEventListener("click", (evt) => supprimerProjet(evt));
-
-    poubelle.classList.add("fa-solid", "fa-trash-can");
-    figureModal.appendChild(poubelle);
-  }
-}
-
-/* Fonction generant l'affichage stade 2 de la modale */
-async function genererModalAjouter() {
-  const modal_previously = document.querySelector(".modal-previoulsy");
-  const modal_wrapper_title = document.querySelector(".modal-wrapper-title");
-  const modal_wrapper_gallery = document.querySelector(
-    ".modal-wrapper-gallery"
-  );
-  const form_select = document.querySelector(".form-select");
-  const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
-  const fileUpload = document.getElementById("fileUpload");
-
-  modal_previously.style.visibility = "visible";
-  modal_wrapper_title.innerText = "Ajout photo";
-  modal_wrapper_form.style.display = "";
-  modal_wrapper_gallery.style.display = "none";
-  fileUpload.addEventListener("change", (img) => uploadImg(img));
-
-  let categories = await getCategories();
-
-  for (let i = 0; i < categories.length; i++) {
-    let categorie = categories[i];
-
-    let optionElement = document.createElement("option");
-    optionElement.innerText = categorie.name;
-    optionElement.value = categorie.id;
-    form_select.appendChild(optionElement);
-  }
-}
-
-/* Filtre*/
-/* Fonction gerant les boutons filtres */
-function activeBoutons() {
-  const btns_filters = document.querySelectorAll(".btn-filters");
-  btns_filters.forEach((btn) =>
-    btn.addEventListener("click", (evt) => {
-      filtrerProjets(evt);
-      document.querySelector(".active").classList.remove("active");
-      btn.classList.add("active");
-    })
-  );
-}
-
+let token = localStorage.getItem("token");
 initialiserPage();
 
-let token = localStorage.getItem("token");
+/* Comportement si le token est détécté ( Mode Edition ) */
 
 if (token !== null) {
   const log = document.getElementById("inAndOut");
@@ -327,5 +343,7 @@ if (token !== null) {
   modal_link.style.display = "";
   modal_link.addEventListener("click", openModal);
 }
+
+/* Script pour page form.html TODO : EXPORT OU MODIFIER STRUCTURE */
 
 login();
