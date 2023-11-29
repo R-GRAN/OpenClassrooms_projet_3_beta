@@ -135,13 +135,13 @@ async function filtrerProjets(evt) {
 
     if (evt.target.value === "Tous") {
       resetGallery();
-      genererProjets(projets);
+      genererProjetsGallery(projets);
     } else {
       resetGallery();
       const projetsFiltres = projets.filter(
         (projet) => projet.category.name === evt.target.value
       );
-      genererProjets(projetsFiltres);
+      genererProjetsGallery(projetsFiltres);
     }
   } catch (error) {
     console.log("error", error);
