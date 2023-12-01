@@ -75,7 +75,7 @@ function supprimerProjet(evt) {
       if (!res.ok) {
         (error) => console.log("error", error);
       } else {
-        getProjets().then((res) => genererProjetsModal(res));
+        console.log("suppression ok");
       }
     });
   } catch (error) {
@@ -92,10 +92,8 @@ function supprimerProjet(evt) {
 /* Fonction generant la gallery */
 function genererProjetsGallery(projets) {
   const sectionGallery = document.querySelector(".gallery");
-
-  for (let i = 0; i < projets.length; i++) {
-    const projet = projets[i];
-
+  resetGallery();
+  for (const projet of projets) {
     const imageElement = document.createElement("img");
     imageElement.src = projet.imageUrl;
 
@@ -110,6 +108,11 @@ function genererProjetsGallery(projets) {
   }
 }
 
+/* Fonction effacant la gallery */
+function resetGallery() {
+  document.querySelector(".gallery").innerHTML = "";
+}
+
 /* Fonction generant la gallery au début du chargement de la page */
 async function initialiserPage() {
   activeBoutons();
@@ -121,9 +124,14 @@ async function initialiserPage() {
   }
 }
 
-/* Fonction effacant la gallery */
-function resetGallery() {
-  document.querySelector(".gallery").innerHTML = "";
+/* Fonction gerant l'affichage des gallery + gallery modale  apres la suppression d'un projet */
+async function handleDelete(evt) {
+  supprimerProjet(evt);
+
+  const projets = await getProjets();
+
+  genererProjetsGallery(projets);
+  genererProjetsModal(projets);
 }
 
 /* Filtres */
@@ -133,11 +141,11 @@ async function filtrerProjets(evt) {
   try {
     let projets = await getProjets();
 
+    resetGallery();
+
     if (evt.target.value === "Tous") {
-      resetGallery();
       genererProjetsGallery(projets);
     } else {
-      resetGallery();
       const projetsFiltres = projets.filter(
         (projet) => projet.category.name === evt.target.value
       );
@@ -213,7 +221,7 @@ function genererProjetsModal(projets) {
     const poubelle = document.createElement("i");
     poubelle.dataset.id = projet.id;
 
-    poubelle.addEventListener("click", (evt) => supprimerProjet(evt));
+    poubelle.addEventListener("click", (evt) => handleDelete(evt));
 
     poubelle.classList.add("fa-solid", "fa-trash-can");
     figureModal.appendChild(poubelle);
@@ -323,6 +331,7 @@ function logout() {
 let modal = null;
 
 let token = localStorage.getItem("token");
+
 initialiserPage();
 
 /* Comportement si le token est détécté ( Mode Edition ) */
