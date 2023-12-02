@@ -313,6 +313,7 @@ input[type="submit"] {
 .modal-link {
   color: black;
   text-decoration: none;
+  margin-left: 1em;
 }
 
 .modal {

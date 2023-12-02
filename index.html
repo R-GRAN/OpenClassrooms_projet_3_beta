@@ -86,53 +86,63 @@
                 <i class="fa-solid fa-xmark"></i>
               </span>
             </nav>
+            <div class="first-step">
+              <h3 class="modal-wrapper-title">Galerie photo</h3>
+              <div class="modal-wrapper-gallery"></div>
+              <hr class="modal-wrapper-bar" />
+              <input
+                class="modal-wrapper-btn"
+                type="submit"
+                value="Ajouter une photo"
+              />
+            </div>
 
-            <h3 class="modal-wrapper-title">Galerie photo</h3>
-            <div class="modal-wrapper-gallery"></div>
-            <hr class="modal-wrapper-bar" />
-            <form action="#" method="post" class="modal-wrapper-form">
-              <label for="fileUpload">
-                <div class="input-area">
-                  <div class="input-details">
-                    <i class="fa-regular fa-image"></i>
-                    <span class="btn">+ Ajouter photo</span>
-                    <span>jpg, png : 4mo max</span>
+            <div class="second-step">
+              <form action="#" method="post" class="modal-wrapper-form">
+                <label for="fileUpload">
+                  <div class="input-area">
+                    <div class="input-details">
+                      <i class="fa-regular fa-image"></i>
+                      <span class="btn">+ Ajouter photo</span>
+                      <span>jpg, png : 4mo max</span>
+                    </div>
+                    <div id="uploadedImageDiv"></div>
                   </div>
-                  <div id="uploadedImageDiv"></div>
-                </div>
-              </label>
-              <input
-                type="file"
-                name="fileUpload"
-                id="fileUpload"
-                accept="image/png, image/jpeg"
-                style="display: none"
-                required
-              />
+                </label>
+                <input
+                  type="file"
+                  name="fileUpload"
+                  id="fileUpload"
+                  accept="image/png, image/jpeg"
+                  style="display: none"
+                  required
+                />
 
-              <label for="title">Titre</label>
-              <input
-                class="modal-wrapper-form-el"
-                type="text"
-                name="title"
-                id="title"
-                required
-              />
-              <label for="category">Catégorie</label>
-              <select
-                class="form-select modal-wrapper-form-el"
-                name="category"
-                id="category"
-                required
-              >
-                <option value=""></option>
-              </select>
-            </form>
-            <input
-              class="modal-wrapper-btn"
-              type="submit"
-              value="Ajouter une photo"
-            />
+                <label for="title">Titre</label>
+                <input
+                  class="modal-wrapper-form-el"
+                  type="text"
+                  name="title"
+                  id="title"
+                  required
+                />
+                <label for="category">Catégorie</label>
+                <select
+                  class="form-select modal-wrapper-form-el"
+                  name="category"
+                  id="category"
+                  required
+                >
+                  <option value=""></option>
+                </select>
+
+                <input
+                  class="modal-wrapper-btn"
+                  type="submit"
+                  value="valider"
+                />
+              </form>
+            </div>
           </div>
         </aside>
         <div id="filters">

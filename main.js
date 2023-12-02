@@ -27,35 +27,27 @@ async function postProjet() {
   const ParsedToken = JSON.parse(token);
 
   const newProjet = {
-    image: evt.target.querySelector(/* SRC ? */).value,
+    file: evt.target.querySelector("[name=fileUpload]").file[0],
     title: evt.target.querySelector("[name=title]").value,
     category: evt.target.querySelector("[name=category]").value,
   };
 
-  const chargeUtile = JSON.stringify(newProjet);
-
+  const formData = new FormData(newProjet);
+  formData.append(file);
+  formData.append(title);
+  formData.append(category);
   try {
     fetch("http://localhost:5678/api/works", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${ParsedToken.token}`,
       },
-      body: chargeUtile,
+      body: formData,
     }).then((res) => {
       if (!res.ok) {
         res.json().then((error) => console.log("error", error));
-
-        let formError = document.getElementById("form-error");
-        formError.innerHTML = "Erreur dans l’identifiant ou le mot de passe";
-        setTimeout(() => {
-          formError.innerHTML = "";
-        }, 3550);
       } else {
-        res
-          .json()
-          .then((data) => storeToken(data))
-          .then((location.href = "index.html"));
+        res.json().then((res) => console.log(res));
       }
     });
   } catch (error) {
@@ -64,7 +56,7 @@ async function postProjet() {
 }
 
 /* Fonction permettant de supprimer un projet de l'API*/
-function supprimerProjet(evt) {
+async function supprimerProjet(evt) {
   const id = evt.target.dataset.id;
   const ParsedToken = JSON.parse(token);
   try {
@@ -125,7 +117,7 @@ async function initialiserPage() {
 }
 
 /* Fonction gerant l'affichage des gallery + gallery modale  apres la suppression d'un projet */
-async function handleDelete(evt) {
+async function handleDeleteProjet(evt) {
   supprimerProjet(evt);
 
   const projets = await getProjets();
@@ -221,7 +213,7 @@ function genererProjetsModal(projets) {
     const poubelle = document.createElement("i");
     poubelle.dataset.id = projet.id;
 
-    poubelle.addEventListener("click", (evt) => handleDelete(evt));
+    poubelle.addEventListener("click", (evt) => handleDeleteProjet(evt));
 
     poubelle.classList.add("fa-solid", "fa-trash-can");
     figureModal.appendChild(poubelle);
