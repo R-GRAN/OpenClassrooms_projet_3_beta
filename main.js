@@ -24,40 +24,33 @@ async function getCategories() {
 
 /* Fonction postant un projet sur l'API */
 async function postProjet() {
+  const file = document.getElementById("fileUpload").files[0];
+  const title = document.getElementById("title").value;
+  const categorie = document.getElementById("category").value;
+
   const ParsedToken = JSON.parse(token);
 
-  const newProjet = {
-    image: evt.target.querySelector(/* SRC ? */).value,
-    title: evt.target.querySelector("[name=title]").value,
-    category: evt.target.querySelector("[name=category]").value,
-  };
+  const formData = new FormData();
 
-  const chargeUtile = JSON.stringify(newProjet);
+  formData.append("image", file);
+  formData.append("title", title);
+  formData.append("category", categorie);
 
   try {
-    fetch("http://localhost:5678/api/works", {
+    let response = await fetch("http://localhost:5678/api/works", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${ParsedToken.token}`,
       },
-      body: chargeUtile,
-    }).then((res) => {
-      if (!res.ok) {
-        res.json().then((error) => console.log("error", error));
-
-        let formError = document.getElementById("form-error");
-        formError.innerHTML = "Erreur dans l’identifiant ou le mot de passe";
-        setTimeout(() => {
-          formError.innerHTML = "";
-        }, 3550);
-      } else {
-        res
-          .json()
-          .then((data) => storeToken(data))
-          .then((location.href = "index.html"));
-      }
+      body: formData,
     });
+    if (!response.ok) {
+      let error = await response.json();
+      console.log("error", error);
+    } else {
+      let result = await response.json();
+      console.log(result);
+    }
   } catch (error) {
     console.log("error", error);
   }
@@ -91,8 +84,11 @@ function supprimerProjet(evt) {
 
 /* Fonction generant la gallery */
 function genererProjetsGallery(projets) {
+  /* Efface la gallery */
   const sectionGallery = document.querySelector(".gallery");
-  resetGallery();
+  sectionGallery.innerHTML = "";
+
+  /* Boucle chaque projet pour l'afficher dans la gallery  */
   for (const projet of projets) {
     const imageElement = document.createElement("img");
     imageElement.src = projet.imageUrl;
@@ -108,11 +104,6 @@ function genererProjetsGallery(projets) {
   }
 }
 
-/* Fonction effacant la gallery */
-function resetGallery() {
-  document.querySelector(".gallery").innerHTML = "";
-}
-
 /* Fonction generant la gallery au début du chargement de la page */
 async function initialiserPage() {
   activeBoutons();
@@ -124,12 +115,11 @@ async function initialiserPage() {
   }
 }
 
-/* Fonction gerant l'affichage des gallery + gallery modale  apres la suppression d'un projet */
-async function handleDelete(evt) {
-  supprimerProjet(evt);
-
+/* Fonction gerant l'affichage des gallery + gallery modale apres la suppression d'un projet */
+async function refresh() {
   const projets = await getProjets();
 
+  /* actualise l'affichage avec les nouveaux projets */
   genererProjetsGallery(projets);
   genererProjetsModal(projets);
 }
@@ -198,39 +188,43 @@ function genererProjetsModal(projets) {
   const modal_wrapper_gallery = document.querySelector(
     ".modal-wrapper-gallery"
   );
-
   const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
+  const modal_wrapper_btn = document.querySelector(".modal-wrapper-btn");
+
+  /* vide le contenu des projets de la modale */
+  modal_wrapper_gallery.innerHTML = "";
+  /* Enleve le formulaire de la modale */
   modal_wrapper_form.style.display = "none";
 
-  const modal_wrapper_btn = document.querySelector(".modal-wrapper-btn");
   modal_wrapper_btn.addEventListener("click", genererModalAjouter);
 
-  modal_wrapper_gallery.innerHTML = "";
+  /* Boucle les projets pour ajouter l'icone et la fonction de suppression du projet */
 
   for (let i = 0; i < projets.length; i++) {
     const projet = projets[i];
 
     const figureModal = document.createElement("figure");
-
     const imageElement = document.createElement("img");
     imageElement.src = projet.imageUrl;
+
+    const poubelle = document.createElement("i");
+    poubelle.dataset.id = projet.id;
+    poubelle.addEventListener("click", (evt) => {
+      supprimerProjet(evt);
+      refresh();
+    });
+    poubelle.classList.add("fa-solid", "fa-trash-can");
 
     modal_wrapper_gallery.appendChild(figureModal);
     figureModal.appendChild(imageElement);
 
-    const poubelle = document.createElement("i");
-    poubelle.dataset.id = projet.id;
-
-    poubelle.addEventListener("click", (evt) => handleDelete(evt));
-
-    poubelle.classList.add("fa-solid", "fa-trash-can");
     figureModal.appendChild(poubelle);
   }
 }
 
 /* Fonction generant l'affichage stade 2 de la modale : Ajouter un projet */
 async function genererModalAjouter() {
-  const modal_previously = document.querySelector(".modal-previoulsy");
+  const modal_back = document.querySelector(".modal-back");
   const modal_wrapper_title = document.querySelector(".modal-wrapper-title");
   const modal_wrapper_gallery = document.querySelector(
     ".modal-wrapper-gallery"
@@ -239,7 +233,7 @@ async function genererModalAjouter() {
   const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
   const fileUpload = document.getElementById("fileUpload");
 
-  modal_previously.style.visibility = "visible";
+  modal_back.style.visibility = "visible";
   modal_wrapper_title.innerText = "Ajout photo";
   modal_wrapper_form.style.display = "";
   modal_wrapper_gallery.style.display = "none";
@@ -255,6 +249,13 @@ async function genererModalAjouter() {
     optionElement.value = categorie.id;
     form_select.appendChild(optionElement);
   }
+
+  modal_wrapper_form.addEventListener("submit", (evt) => {
+    evt.preventDefault();
+    postProjet();
+    closeModal(evt);
+    refresh();
+  });
 }
 
 /* Fonction permettant d'afficher l'image du projet à ajouter*/
@@ -337,7 +338,7 @@ initialiserPage();
 /* Comportement si le token est détécté ( Mode Edition ) */
 
 if (token !== null) {
-  const log = document.getElementById("inAndOut");
+  const log = document.getElementById("loginAndOut");
   log.innerText = "logout";
   log.setAttribute("href", "index.html");
   log.addEventListener("click", logout);
