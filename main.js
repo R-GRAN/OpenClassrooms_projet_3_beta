@@ -335,7 +335,7 @@ function logout() {
 
 /* Script pour index.html */
 
-
+initialiserPage();
 
 let modal = null;
 let token = localStorage.getItem("token");
