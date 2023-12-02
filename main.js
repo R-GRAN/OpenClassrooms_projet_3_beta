@@ -26,16 +26,14 @@ async function getCategories() {
 async function postProjet() {
   const ParsedToken = JSON.parse(token);
 
-  const newProjet = {
-    file: evt.target.querySelector("[name=fileUpload]").file[0],
-    title: evt.target.querySelector("[name=title]").value,
-    category: evt.target.querySelector("[name=category]").value,
-  };
+  const image = document.getElementById("fileUpload").files[0];
+  const title = document.getElementById("title").value;
+  const category = document.getElementById("category").value;
 
-  const formData = new FormData(newProjet);
-  formData.append(file);
-  formData.append(title);
-  formData.append(category);
+  const formData = new FormData();
+  formData.append("image", image);
+  formData.append("title", title);
+  formData.append("category", category);
   try {
     fetch("http://localhost:5678/api/works", {
       method: "POST",
@@ -116,7 +114,7 @@ async function initialiserPage() {
   }
 }
 
-/* Fonction gerant l'affichage des gallery + gallery modale  apres la suppression d'un projet */
+/* Fonction gerant l'affichage des gallery + gallery modale  après la suppression d'un projet */
 async function handleDeleteProjet(evt) {
   supprimerProjet(evt);
 
@@ -124,6 +122,16 @@ async function handleDeleteProjet(evt) {
 
   genererProjetsGallery(projets);
   genererProjetsModal(projets);
+}
+
+/* Fonction gerant le comportement après l'ajout d'un projet */
+async function handleAddProjet(evt) {
+  evt.preventDefault();
+  await postProjet();
+  let projets = await getProjets();
+  closeModal(evt);
+  resetGallery();
+  genererProjetsGallery(projets);
 }
 
 /* Filtres */
@@ -191,8 +199,16 @@ function genererProjetsModal(projets) {
     ".modal-wrapper-gallery"
   );
 
-  const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
-  modal_wrapper_form.style.display = "none";
+  const first_step = document.querySelector(".first-step");
+  const second_step = document.querySelector(".second-step");
+  const modal_back = document.querySelector(".modal-back");
+
+  modal_back.style.visibility = "hidden";
+  modal_back.addEventListener("click", (projets) =>
+    genererProjetsModal(projets)
+  );
+  first_step.style.display = null;
+  second_step.style.display = "none";
 
   const modal_wrapper_btn = document.querySelector(".modal-wrapper-btn");
   modal_wrapper_btn.addEventListener("click", genererModalAjouter);
@@ -222,19 +238,16 @@ function genererProjetsModal(projets) {
 
 /* Fonction generant l'affichage stade 2 de la modale : Ajouter un projet */
 async function genererModalAjouter() {
-  const modal_previously = document.querySelector(".modal-previoulsy");
-  const modal_wrapper_title = document.querySelector(".modal-wrapper-title");
-  const modal_wrapper_gallery = document.querySelector(
-    ".modal-wrapper-gallery"
-  );
+  const first_step = document.querySelector(".first-step");
+  const second_step = document.querySelector(".second-step");
+  const modal_back = document.querySelector(".modal-back");
   const form_select = document.querySelector(".form-select");
   const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
   const fileUpload = document.getElementById("fileUpload");
 
-  modal_previously.style.visibility = "visible";
-  modal_wrapper_title.innerText = "Ajout photo";
-  modal_wrapper_form.style.display = "";
-  modal_wrapper_gallery.style.display = "none";
+  first_step.style.display = "none";
+  second_step.style.display = null;
+  modal_back.style.visibility = "visible";
   fileUpload.addEventListener("change", (img) => afficherImg(img));
 
   let categories = await getCategories();
@@ -247,6 +260,8 @@ async function genererModalAjouter() {
     optionElement.value = categorie.id;
     form_select.appendChild(optionElement);
   }
+
+  modal_wrapper_form.addEventListener("submit", (evt) => handleAddProjet(evt));
 }
 
 /* Fonction permettant d'afficher l'image du projet à ajouter*/
@@ -320,13 +335,10 @@ function logout() {
 
 /* Script pour index.html */
 
+
+
 let modal = null;
-
 let token = localStorage.getItem("token");
-
-initialiserPage();
-
-/* Comportement si le token est détécté ( Mode Edition ) */
 
 if (token !== null) {
   const log = document.getElementById("inAndOut");
