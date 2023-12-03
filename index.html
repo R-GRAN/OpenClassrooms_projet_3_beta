@@ -19,7 +19,7 @@
     />
     <meta name="description" content="" />
     <link rel="stylesheet" href="./assets/style.css" />
-    <script type="module" src="./main.js" defer></script>
+    <script src="./main.js" defer></script>
   </head>
   <body>
     <div id="editor-banner">
@@ -75,6 +75,7 @@
             ><i class="fa-solid fa-pen-to-square"></i> modifier</a
           >
         </div>
+
         <aside id="modal1" class="modal" style="display: none">
           <div class="modal-wrapper modal-stop">
             <nav class="modal-wrapper-nav">
@@ -86,6 +87,7 @@
                 <i class="fa-solid fa-xmark"></i>
               </span>
             </nav>
+
             <div class="first-step">
               <h3 class="modal-wrapper-title">Galerie photo</h3>
               <div class="modal-wrapper-gallery"></div>
@@ -138,9 +140,11 @@
                 </select>
 
                 <input
-                  class="modal-wrapper-btn"
                   type="submit"
-                  value="valider"
+                  id="modal-btn-valider"
+                  class="modal-wrapper-btn"
+                  value="Valider"
+                  disabled
                 />
               </form>
             </div>

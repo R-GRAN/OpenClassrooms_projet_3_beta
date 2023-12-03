@@ -73,8 +73,6 @@ async function supprimerProjet(evt) {
   }
 }
 
-/* ------  Fin Appels API  ------*/
-
 /* ------  Gestion de contenu ------*/
 
 /* Gallery */
@@ -114,7 +112,7 @@ async function initialiserPage() {
   }
 }
 
-/* Fonction gerant l'affichage des gallery + gallery modale  après la suppression d'un projet */
+/* Fonction gerant l'affichage des gallery + gallery modale après la suppression d'un projet */
 async function handleDeleteProjet(evt) {
   supprimerProjet(evt);
 
@@ -169,7 +167,6 @@ function activeBoutons() {
 }
 
 /* Modale */
-
 /* Fonction gerant l'ouverture de la modale */
 async function openModal(evt) {
   evt.preventDefault();
@@ -244,11 +241,18 @@ async function genererModalAjouter() {
   const form_select = document.querySelector(".form-select");
   const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
   const fileUpload = document.getElementById("fileUpload");
+  const title = document.getElementById("title");
+  const category = document.getElementById("category");
+  const modal_btn_valider = document.getElementById("modal-btn-valider");
 
   first_step.style.display = "none";
   second_step.style.display = null;
   modal_back.style.visibility = "visible";
   fileUpload.addEventListener("change", (img) => afficherImg(img));
+  fileUpload.addEventListener("change", verif);
+  title.addEventListener("input", verif);
+  category.addEventListener("input", verif);
+  modal_btn_valider.style.background = "#b3b3b3";
 
   let categories = await getCategories();
 
@@ -277,61 +281,25 @@ function afficherImg(img) {
   display.appendChild(newImage);
 }
 
-/* ------  Fin Gestion de contenu ------*/
+/* fonction gerant le comportement du bouton "valider" */
+function verif() {
+  const modal_btn_valider = document.getElementById("modal-btn-valider");
 
-/* ------  Gestion Login ------*/
-
-/* Fonction enregistrant le token dans le localStorage */
-function storeToken(data) {
-  localStorage.setItem("token", JSON.stringify(data));
+  if (fileUpload.files[0] && title.value && category.value) {
+    modal_btn_valider.disabled = false;
+    modal_btn_valider.style.background = "";
+  } else {
+    modal_btn_valider.disabled = true;
+    modal_btn_valider.style.background = "#A7A7A7";
+  }
 }
 
-/* Fonction permettant de se connecter */
-function login() {
-  const formulaireLogin = document.querySelector(".formulaire-login");
-  formulaireLogin.addEventListener("submit", (evt) => {
-    evt.preventDefault();
-
-    const authentifiant = {
-      email: evt.target.querySelector("[name=email]").value,
-      password: evt.target.querySelector("[name=password]").value,
-    };
-
-    const chargeUtile = JSON.stringify(authentifiant);
-
-    try {
-      fetch("http://localhost:5678/api/users/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: chargeUtile,
-      }).then((res) => {
-        if (!res.ok) {
-          res.json().then((error) => console.log("error", error));
-
-          let formError = document.getElementById("form-error");
-          formError.innerHTML = "Erreur dans l’identifiant ou le mot de passe";
-          setTimeout(() => {
-            formError.innerHTML = "";
-          }, 3550);
-        } else {
-          res
-            .json()
-            .then((data) => storeToken(data))
-            .then((location.href = "index.html"));
-        }
-      });
-    } catch (error) {
-      console.log("error", error);
-    }
-  });
-}
+/* ------  Gestion Logout ------*/
 
 /* fonction permettant de se deconnecter */
 function logout() {
   localStorage.removeItem("token");
 }
-
-/* ------  Fin Gestion Login ------*/
 
 /* Script pour index.html */
 
@@ -356,7 +324,3 @@ if (token !== null) {
   modal_link.style.display = "";
   modal_link.addEventListener("click", openModal);
 }
-
-/* Script pour page form.html TODO : EXPORT OU MODIFIER STRUCTURE */
-
-login();
