@@ -216,7 +216,7 @@ li a:hover {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 2.5em;
+  margin-bottom: 4.5em;
 }
 
 .btn-filters {
@@ -307,7 +307,7 @@ input[type="submit"] {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 1em;
+  margin: 3em 0;
 }
 
 .modal-link {
@@ -351,13 +351,15 @@ input[type="submit"] {
 }
 
 .modal-wrapper-gallery {
-  margin: auto;
-  width: 420px;
   display: grid;
+  width: 420px;
+  max-height: 352.75px;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-column-gap: 10px;
   grid-row-gap: 20px;
-  padding-bottom: 5em;
+  margin: 2em auto;
+  padding: 0 20px;
+  overflow: scroll;
 }
 
 .modal-wrapper-gallery figure {
@@ -385,6 +387,7 @@ input[type="submit"] {
 .modal-wrapper-bar {
   width: 420px;
   border: 1px solid #b3b3b3;
+  margin-top: 3em;
 }
 
 .modal-wrapper-form {
@@ -453,7 +456,6 @@ input[type="submit"] {
   display: block;
   width: 237px;
   height: 36px;
-  font-size: 1.2em;
   margin: 2em auto;
   border: none;
 }

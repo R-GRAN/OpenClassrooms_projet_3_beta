@@ -103,7 +103,7 @@ function resetGallery() {
 
 /* Fonction generant la gallery au début du chargement de la page */
 async function initialiserPage() {
-  activeBoutons();
+  handleBoutonsActive();
   try {
     let projets = await getProjets();
     genererProjetsGallery(projets);
@@ -155,7 +155,7 @@ async function filtrerProjets(evt) {
 }
 
 /* Fonction attribuant et gerant le comportement des boutons filtres */
-function activeBoutons() {
+function handleBoutonsActive() {
   const btns_filters = document.querySelectorAll(".btn-filters");
   btns_filters.forEach((btn) =>
     btn.addEventListener("click", (evt) => {
@@ -249,9 +249,9 @@ async function genererModalAjouter() {
   second_step.style.display = null;
   modal_back.style.visibility = "visible";
   fileUpload.addEventListener("change", (img) => afficherImg(img));
-  fileUpload.addEventListener("change", verif);
-  title.addEventListener("input", verif);
-  category.addEventListener("input", verif);
+  fileUpload.addEventListener("change", handleBtnValider);
+  title.addEventListener("input", handleBtnValider);
+  category.addEventListener("input", handleBtnValider);
   modal_btn_valider.style.background = "#b3b3b3";
 
   let categories = await getCategories();
@@ -282,7 +282,7 @@ function afficherImg(img) {
 }
 
 /* fonction gerant le comportement du bouton "valider" */
-function verif() {
+function handleBtnValider() {
   const modal_btn_valider = document.getElementById("modal-btn-valider");
 
   if (fileUpload.files[0] && title.value && category.value) {
@@ -307,6 +307,8 @@ initialiserPage();
 
 let modal = null;
 let token = localStorage.getItem("token");
+
+/* Si token Mode édition */
 
 if (token !== null) {
   const log = document.getElementById("inAndOut");
