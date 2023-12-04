@@ -23,7 +23,9 @@ async function getCategories() {
 }
 
 /* Fonction postant un projet sur l'API */
-async function postProjet() {
+async function postProjet(evt) {
+  evt.preventDefault();
+
   const ParsedToken = JSON.parse(token);
 
   const image = document.getElementById("fileUpload").files[0];
@@ -45,7 +47,9 @@ async function postProjet() {
       if (!res.ok) {
         res.json().then((error) => console.log("error", error));
       } else {
-        res.json().then((res) => console.log(res));
+        getProjets()
+          .then((projets) => genererProjetsGallery(projets))
+          .then(closeModal(evt));
       }
     });
   } catch (error) {
@@ -65,7 +69,10 @@ async function supprimerProjet(evt) {
       if (!res.ok) {
         (error) => console.log("error", error);
       } else {
-        console.log("suppression ok");
+        getProjets().then((projets) => {
+          genererProjetsModal(projets);
+          genererProjetsGallery(projets);
+        });
       }
     });
   } catch (error) {
@@ -120,16 +127,6 @@ async function handleDeleteProjet(evt) {
 
   genererProjetsGallery(projets);
   genererProjetsModal(projets);
-}
-
-/* Fonction gerant le comportement après l'ajout d'un projet */
-async function handleAddProjet(evt) {
-  evt.preventDefault();
-  postProjet();
-  const projets = await getProjets();
-  resetGallery();
-  genererProjetsGallery(projets);
-  closeModal(evt);
 }
 
 /* Filtres */
@@ -226,7 +223,7 @@ function genererProjetsModal(projets) {
     const poubelle = document.createElement("i");
     poubelle.dataset.id = projet.id;
 
-    poubelle.addEventListener("click", (evt) => handleDeleteProjet(evt));
+    poubelle.addEventListener("click", (evt) => supprimerProjet(evt));
 
     poubelle.classList.add("fa-solid", "fa-trash-can");
     figureModal.appendChild(poubelle);
@@ -265,7 +262,7 @@ async function genererModalAjouter() {
     form_select.appendChild(optionElement);
   }
 
-  modal_wrapper_form.addEventListener("submit", (evt) => handleAddProjet(evt));
+  modal_wrapper_form.addEventListener("submit", (evt) => postProjet(evt));
 }
 
 /* Fonction permettant d'afficher l'image du projet à ajouter*/
