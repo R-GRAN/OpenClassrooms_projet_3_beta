@@ -125,11 +125,11 @@ async function handleDeleteProjet(evt) {
 /* Fonction gerant le comportement après l'ajout d'un projet */
 async function handleAddProjet(evt) {
   evt.preventDefault();
-  await postProjet();
-  let projets = await getProjets();
-  closeModal(evt);
+  postProjet();
+  const projets = await getProjets();
   resetGallery();
   genererProjetsGallery(projets);
+  closeModal(evt);
 }
 
 /* Filtres */
@@ -278,6 +278,7 @@ function afficherImg(img) {
   let display = document.getElementById("uploadedImageDiv");
   const input_details = document.querySelector(".input-details ");
   input_details.style.display = "none";
+  display.innerHTML = "";
   display.appendChild(newImage);
 }
 
