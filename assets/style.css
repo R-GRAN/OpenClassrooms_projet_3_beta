@@ -181,7 +181,8 @@ nav li a {
 }
 
 li a:hover {
-  color: #b1663c;
+  font-weight: 700;
+  /* color: #b1663c */
 }
 
 #introduction {
@@ -285,6 +286,10 @@ input[type="submit"] {
   width: 180px;
   text-align: center;
   border-radius: 60px;
+}
+
+input[type="submit"]:hover {
+  background: #0e2f28;
 }
 
 /* Ajout */

@@ -211,13 +211,25 @@ function closeModal(evt) {
   //si le formulaire est défini, efface ses valeurs
   if (modal_wrapper_form) {
     modal_wrapper_form.reset();
-
     afficherImg();
   }
 
   //enleve la modale de l'ecran et met son statut à null
   modal.style.display = "none";
   modal = null;
+}
+
+/* Fonction gerant le retour de la modale */
+async function backModal() {
+  const projets = await getProjets();
+  const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
+
+  //efface les valeurs du formulaire
+  modal_wrapper_form.reset();
+  afficherImg();
+
+  //genere la module
+  genererProjetsModal(projets);
 }
 
 /* Fonction generant l'affichage stade 1 de la modale : Supprimer un projet */
@@ -232,7 +244,7 @@ function genererProjetsModal(projets) {
 
   // cache le bouton "back" et lui attribut sa fonction
   modal_back.style.visibility = "hidden";
-  modal_back.addEventListener("click", () => genererProjetsModal(projets));
+  modal_back.addEventListener("click", backModal);
 
   // affiche le premier contenu de la modale et enleve le second contenu
   first_step.style.display = null;
@@ -357,6 +369,7 @@ function logout() {
 
 /* Script pour index.html */
 
+/* Fonction enregistrant les categories dans le localStorage */
 async function storeCategories() {
   if (categories === null) {
     categories = await getCategories();
