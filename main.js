@@ -204,12 +204,15 @@ async function openModal(evt) {
 function closeModal(evt) {
   evt.preventDefault();
   const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
+  //const form_select = document.querySelector(".form-select");
   //verification : si le status de la modale est null, ne rien faire
   if (modal === null) return;
 
   //si le formulaire est défini, efface ses valeurs
   if (modal_wrapper_form) {
     modal_wrapper_form.reset();
+
+    afficherImg();
   }
 
   //enleve la modale de l'ecran et met son statut à null
@@ -287,7 +290,7 @@ async function genererModalAjouter() {
   modal_back.style.visibility = "visible";
 
   // ecoute lorsqu'un fichier est saisi et affiche l'image du fichier
-  fileUpload.addEventListener("input", (img) => afficherImg(img));
+  fileUpload.addEventListener("input", afficherImg);
 
   //ecoute les elements du formulaire, active le bouton "valider" quand tous les elements sont remplis
   fileUpload.addEventListener("input", handleBtnValider);
@@ -314,19 +317,19 @@ async function genererModalAjouter() {
 }
 
 /* Fonction permettant d'afficher l'image du projet à ajouter*/
-function afficherImg(img) {
-  const imgToProcess = img.target.files[0];
+function afficherImg() {
+  const imgToProcess = document.getElementById("fileUpload");
   const input_details = document.querySelector(".input-details ");
   const uploadedImageDiv = document.getElementById("uploadedImageDiv");
+
   //si aucun fichier : vider la zone d'affichage du fichier et afficher la zone explicative
-  if (imgToProcess === undefined) {
+  if (imgToProcess.files[0] === undefined) {
     uploadedImageDiv.innerHTML = null;
     input_details.style.display = null;
   } else {
     // si fichier chargé : créer une nouvelle image, enlever la zone explicative et afficher une image du fichier
     let newImage = new Image();
-    newImage.src = URL.createObjectURL(imgToProcess);
-
+    newImage.src = URL.createObjectURL(imgToProcess.files[0]);
     input_details.style.display = "none";
     uploadedImageDiv.innerHTML = null;
     uploadedImageDiv.appendChild(newImage);
@@ -356,6 +359,8 @@ function logout() {
 }
 
 /* Script pour index.html */
+
+
 
 initialiserPage();
 
