@@ -27,7 +27,7 @@ async function postProjet(evt) {
   evt.preventDefault();
 
   const ParsedToken = JSON.parse(token);
-
+  const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
   const image = document.getElementById("fileUpload").files[0];
   const title = document.getElementById("title").value;
   const category = document.getElementById("category").value;
@@ -49,6 +49,7 @@ async function postProjet(evt) {
       } else {
         getProjets()
           .then((projets) => genererProjetsGallery(projets))
+          .then(modal_wrapper_form.reset())
           .then(closeModal(evt));
       }
     });
@@ -117,16 +118,6 @@ async function initialiserPage() {
   } catch (error) {
     console.log("error", error);
   }
-}
-
-/* Fonction gerant l'affichage des gallery + gallery modale après la suppression d'un projet */
-async function handleDeleteProjet(evt) {
-  supprimerProjet(evt);
-
-  const projets = await getProjets();
-
-  genererProjetsGallery(projets);
-  genererProjetsModal(projets);
 }
 
 /* Filtres */
@@ -245,8 +236,8 @@ async function genererModalAjouter() {
   first_step.style.display = "none";
   second_step.style.display = null;
   modal_back.style.visibility = "visible";
-  fileUpload.addEventListener("change", (img) => afficherImg(img));
-  fileUpload.addEventListener("change", handleBtnValider);
+  fileUpload.addEventListener("input", (img) => afficherImg(img));
+  fileUpload.addEventListener("input", handleBtnValider);
   title.addEventListener("input", handleBtnValider);
   category.addEventListener("input", handleBtnValider);
   modal_btn_valider.style.background = "#b3b3b3";
@@ -267,16 +258,20 @@ async function genererModalAjouter() {
 
 /* Fonction permettant d'afficher l'image du projet à ajouter*/
 function afficherImg(img) {
-  let imgToProcess = img.target.files[0];
-
-  let newImage = new Image();
-  newImage.src = URL.createObjectURL(imgToProcess);
-
-  let display = document.getElementById("uploadedImageDiv");
+  const imgToProcess = img.target.files[0];
   const input_details = document.querySelector(".input-details ");
-  input_details.style.display = "none";
-  display.innerHTML = "";
-  display.appendChild(newImage);
+  const uploadedImageDiv = document.getElementById("uploadedImageDiv");
+  if (imgToProcess === undefined) {
+    uploadedImageDiv.innerHTML = null;
+    input_details.style.display = null;
+  } else {
+    let newImage = new Image();
+    newImage.src = URL.createObjectURL(imgToProcess);
+
+    input_details.style.display = "none";
+    uploadedImageDiv.innerHTML = null;
+    uploadedImageDiv.appendChild(newImage);
+  }
 }
 
 /* fonction gerant le comportement du bouton "valider" */
@@ -285,7 +280,7 @@ function handleBtnValider() {
 
   if (fileUpload.files[0] && title.value && category.value) {
     modal_btn_valider.disabled = false;
-    modal_btn_valider.style.background = "";
+    modal_btn_valider.style.background = null;
   } else {
     modal_btn_valider.disabled = true;
     modal_btn_valider.style.background = "#A7A7A7";
