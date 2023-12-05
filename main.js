@@ -232,9 +232,7 @@ function genererProjetsModal(projets) {
 
   // cache le bouton "back" et lui attribut sa fonction
   modal_back.style.visibility = "hidden";
-  modal_back.addEventListener("click", (projets) =>
-    genererProjetsModal(projets)
-  );
+  modal_back.addEventListener("click", () => genererProjetsModal(projets));
 
   // affiche le premier contenu de la modale et enleve le second contenu
   first_step.style.display = null;
@@ -300,8 +298,7 @@ async function genererModalAjouter() {
   // bouton "valider" en gris
   modal_btn_valider.style.background = "#b3b3b3";
 
-  //recupere les categories de l'API et les boucles pour les mettre en options dans le select du formulaire
-  let categories = await getCategories();
+  //boucle les categories pour les mettre en options dans le select du formulaire
 
   for (let i = 0; i < categories.length; i++) {
     let categorie = categories[i];
@@ -360,28 +357,44 @@ function logout() {
 
 /* Script pour index.html */
 
-
+async function storeCategories() {
+  if (categories === null) {
+    categories = await getCategories();
+    const categoriesValue = JSON.stringify(categories);
+    window.localStorage.setItem("categories", categoriesValue);
+  } else {
+    categories = await JSON.parse(categories);
+  }
+}
 
 initialiserPage();
 
 let modal = null;
 let token = localStorage.getItem("token");
+let categories = window.localStorage.getItem("categories");
 
 /* Si token Mode édition */
 
 if (token !== null) {
+  //enregiste les categories dans le localstorage si ce n'est pas le cas
+  storeCategories();
+
+  //modifie le lien login dans la nav en logout, la redirection et la fonction pour retirer le token
   const log = document.getElementById("inAndOut");
   log.innerText = "logout";
   log.setAttribute("href", "index.html");
   log.addEventListener("click", logout);
 
+  //affiche la bannière du mode édition
   const banner = document.getElementById("editor-banner");
   banner.style.display = "flex";
 
+  //enleve les filtres
   const filters = document.getElementById("filters");
   filters.style.display = "none";
 
+  // affiche le lien d'accès à la modale
   const modal_link = document.querySelector(".modal-link");
-  modal_link.style.display = "";
+  modal_link.style.display = null;
   modal_link.addEventListener("click", openModal);
 }

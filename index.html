@@ -28,159 +28,165 @@
         <span>Mode édition</span>
       </div>
     </div>
-    <header id="home">
-      <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
-      <nav>
-        <ul>
-          <li><a href="#portfolio">projets</a></li>
-          <li><a href="#contact">contact</a></li>
-          <li><a id="inAndOut" href="form.html">login</a></li>
-          <li>
-            <img src="./assets/icons/instagram.png" alt="Instagram" />
-          </li>
-        </ul>
-      </nav>
-    </header>
-    <main>
-      <section id="introduction">
-        <figure>
-          <img
-            src="./assets/images/sophie-bluel.png"
-            alt="Photo de Sophie Bluel"
-          />
-        </figure>
-        <article>
-          <h2>Designer d'espace</h2>
-          <p>
-            Je raconte votre histoire, je valorise vos idées. Je vous accompagne
-            de la conception à la livraison finale du chantier.
-          </p>
-          <p>
-            Chaque projet sera étudié en commun, de façon à mettre en valeur les
-            volumes, les matières et les couleurs dans le respect de l’esprit
-            des lieux et le choix adapté des matériaux. Le suivi du chantier
-            sera assuré dans le souci du détail, le respect du planning et du
-            budget.
-          </p>
-          <p>
-            En cas de besoin, une équipe pluridisciplinaire peut-être constituée
-            : architecte DPLG, décorateur(trice)
-          </p>
-        </article>
-      </section>
-      <section id="portfolio">
-        <div class="portfolio-title">
-          <h2>Mes Projets</h2>
-          <a class="modal-link" href="#modal1" style="display: none"
-            ><i class="fa-solid fa-pen-to-square"></i> modifier</a
-          >
-        </div>
-
-        <aside id="modal1" class="modal" style="display: none">
-          <div class="modal-wrapper modal-stop">
-            <nav class="modal-wrapper-nav">
-              <span class="modal-back" style="visibility: hidden">
-                <i class="fa-solid fa-arrow-left"></i>
-              </span>
-
-              <span class="modal-close">
-                <i class="fa-solid fa-xmark"></i>
-              </span>
-            </nav>
-
-            <div class="first-step">
-              <h3 class="modal-wrapper-title">Galerie photo</h3>
-              <div class="modal-wrapper-gallery"></div>
-              <hr class="modal-wrapper-bar" />
-              <input
-                class="modal-wrapper-btn"
-                type="submit"
-                value="Ajouter une photo"
-              />
-            </div>
-
-            <div class="second-step">
-              <h3 class="modal-wrapper-title">Ajout photo</h3>
-              <form action="#" method="post" class="modal-wrapper-form">
-                <label for="fileUpload">
-                  <div class="input-area">
-                    <div class="input-details">
-                      <i class="fa-regular fa-image"></i>
-                      <span class="btn">+ Ajouter photo</span>
-                      <span>jpg, png : 4mo max</span>
-                    </div>
-                    <div id="uploadedImageDiv"></div>
-                  </div>
-                </label>
-                <input
-                  type="file"
-                  name="fileUpload"
-                  id="fileUpload"
-                  accept="image/png, image/jpeg"
-                  style="display: none"
-                  multiple="false"
-                  required
-                />
-
-                <label for="title">Titre</label>
-                <input
-                  class="modal-wrapper-form-el"
-                  type="text"
-                  name="title"
-                  id="title"
-                  required
-                />
-                <label for="category">Catégorie</label>
-                <select
-                  class="form-select modal-wrapper-form-el"
-                  name="category"
-                  id="category"
-                  required
-                >
-                  <option value=""></option>
-                </select>
-
-                <hr class="modal-wrapper-bar" />
-
-                <input
-                  type="submit"
-                  id="modal-btn-valider"
-                  class="modal-wrapper-btn"
-                  value="Valider"
-                  disabled
-                />
-              </form>
-            </div>
+    <div class="main-container">
+      <header id="home">
+        <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
+        <nav>
+          <ul>
+            <li><a href="#portfolio">projets</a></li>
+            <li><a href="#contact">contact</a></li>
+            <li><a id="inAndOut" href="form.html">login</a></li>
+            <li>
+              <img src="./assets/icons/instagram.png" alt="Instagram" />
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <main>
+        <section id="introduction">
+          <figure>
+            <img
+              src="./assets/images/sophie-bluel.png"
+              alt="Photo de Sophie Bluel"
+            />
+          </figure>
+          <article>
+            <h2>Designer d'espace</h2>
+            <p>
+              Je raconte votre histoire, je valorise vos idées. Je vous
+              accompagne de la conception à la livraison finale du chantier.
+            </p>
+            <p>
+              Chaque projet sera étudié en commun, de façon à mettre en valeur
+              les volumes, les matières et les couleurs dans le respect de
+              l’esprit des lieux et le choix adapté des matériaux. Le suivi du
+              chantier sera assuré dans le souci du détail, le respect du
+              planning et du budget.
+            </p>
+            <p>
+              En cas de besoin, une équipe pluridisciplinaire peut-être
+              constituée : architecte DPLG, décorateur(trice)
+            </p>
+          </article>
+        </section>
+        <section id="portfolio">
+          <div class="portfolio-title">
+            <h2>Mes Projets</h2>
+            <a class="modal-link" href="#modal1" style="display: none"
+              ><i class="fa-solid fa-pen-to-square"></i> modifier</a
+            >
           </div>
-        </aside>
-        <div id="filters">
-          <input class="btn-filters active" type="button" value="Tous" />
-          <input class="btn-filters" type="button" value="Objets" />
-          <input class="btn-filters" type="button" value="Appartements" />
-          <input
-            class="btn-filters"
-            type="button"
-            value="Hotels & restaurants"
-          />
-        </div>
 
-        <div class="gallery"></div>
-      </section>
-      <section id="contact">
-        <h2>Contact</h2>
-        <p>Vous avez un projet ? Discutons-en !</p>
-        <form action="#" method="post">
-          <label for="name">Nom</label>
-          <input type="text" name="name" id="name" />
-          <label for="email">Email</label>
-          <input type="email" name="email" id="email" />
-          <label for="message">Message</label>
-          <textarea name="message" id="message" cols="30" rows="10"></textarea>
-          <input type="submit" value="Envoyer" />
-        </form>
-      </section>
-    </main>
+          <aside id="modal1" class="modal" style="display: none">
+            <div class="modal-wrapper modal-stop">
+              <nav class="modal-wrapper-nav">
+                <span class="modal-back" style="visibility: hidden">
+                  <i class="fa-solid fa-arrow-left"></i>
+                </span>
 
+                <span class="modal-close">
+                  <i class="fa-solid fa-xmark"></i>
+                </span>
+              </nav>
+
+              <div class="first-step">
+                <h3 class="modal-wrapper-title">Galerie photo</h3>
+                <div class="modal-wrapper-gallery"></div>
+                <hr class="modal-wrapper-bar" />
+                <input
+                  class="modal-wrapper-btn"
+                  type="submit"
+                  value="Ajouter une photo"
+                />
+              </div>
+
+              <div class="second-step">
+                <h3 class="modal-wrapper-title">Ajout photo</h3>
+                <form action="#" method="post" class="modal-wrapper-form">
+                  <label for="fileUpload">
+                    <div class="input-area">
+                      <div class="input-details">
+                        <i class="fa-regular fa-image"></i>
+                        <span class="btn">+ Ajouter photo</span>
+                        <span>jpg, png : 4mo max</span>
+                      </div>
+                      <div id="uploadedImageDiv"></div>
+                    </div>
+                  </label>
+                  <input
+                    type="file"
+                    name="fileUpload"
+                    id="fileUpload"
+                    accept="image/png, image/jpeg"
+                    style="display: none"
+                    multiple="false"
+                    required
+                  />
+
+                  <label for="title">Titre</label>
+                  <input
+                    class="modal-wrapper-form-el"
+                    type="text"
+                    name="title"
+                    id="title"
+                    required
+                  />
+                  <label for="category">Catégorie</label>
+                  <select
+                    class="form-select modal-wrapper-form-el"
+                    name="category"
+                    id="category"
+                    required
+                  >
+                    <option value=""></option>
+                  </select>
+
+                  <hr class="modal-wrapper-bar" />
+
+                  <input
+                    type="submit"
+                    id="modal-btn-valider"
+                    class="modal-wrapper-btn"
+                    value="Valider"
+                    disabled
+                  />
+                </form>
+              </div>
+            </div>
+          </aside>
+          <div id="filters">
+            <input class="btn-filters active" type="button" value="Tous" />
+            <input class="btn-filters" type="button" value="Objets" />
+            <input class="btn-filters" type="button" value="Appartements" />
+            <input
+              class="btn-filters"
+              type="button"
+              value="Hotels & restaurants"
+            />
+          </div>
+
+          <div class="gallery"></div>
+        </section>
+        <section id="contact">
+          <h2>Contact</h2>
+          <p>Vous avez un projet ? Discutons-en !</p>
+          <form action="#" method="post">
+            <label for="name">Nom</label>
+            <input type="text" name="name" id="name" />
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" />
+            <label for="message">Message</label>
+            <textarea
+              name="message"
+              id="message"
+              cols="30"
+              rows="10"
+            ></textarea>
+            <input type="submit" value="Envoyer" />
+          </form>
+        </section>
+      </main>
+    </div>
     <footer>
       <nav>
         <ul>
