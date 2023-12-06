@@ -14,38 +14,40 @@
     <script src="./login.js" defer></script>
   </head>
   <body>
-    <header>
-      <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
-      <nav>
-        <ul>
-          <li><a href="index.html#portfolio">projets</a></li>
-          <li><a href="index.html#contact">contact</a></li>
-          <li><a href="form.html" target="_blank">login</a></li>
-          <li><img src="./assets/icons/instagram.png" alt="Instagram" /></li>
-        </ul>
-      </nav>
-    </header>
-    <main>
-      <section id="contact">
-        <h2>Login</h2>
-        <form class="formulaire-login" action="#" method="post">
-          <label for="email">E-mail</label>
-          <input type="email" name="email" id="email" required />
+    <div class="main-container">
+      <header>
+        <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
+        <nav>
+          <ul>
+            <li><a href="index.html#portfolio">projets</a></li>
+            <li><a href="index.html#contact">contact</a></li>
+            <li><a href="form.html" target="_blank">login</a></li>
+            <li><img src="./assets/icons/instagram.png" alt="Instagram" /></li>
+          </ul>
+        </nav>
+      </header>
+      <main>
+        <section id="contact">
+          <h2>Login</h2>
+          <form class="formulaire-login" action="#" method="post">
+            <label for="email">E-mail</label>
+            <input type="email" name="email" id="email" required />
 
-          <label for="password">Mot de passe</label>
-          <input type="password" name="password" id="password" required />
+            <label for="password">Mot de passe</label>
+            <input type="password" name="password" id="password" required />
 
-          <span id="form-error"></span>
+            <span id="form-error"></span>
 
-          <input type="submit" value="Se connecter" />
-          <a href="#">Mot de passe oublié</a>
-        </form>
-      </section>
-    </main>
+            <input type="submit" value="Se connecter" />
+            <a href="#">Mot de passe oublié</a>
+          </form>
+        </section>
+      </main>
+    </div>
     <footer class="footer-login">
       <nav>
         <ul>
-          <li>Mentions Légales</li>
+          <li><a href="#">Mentions Légales</a></li>
         </ul>
       </nav>
     </footer>
