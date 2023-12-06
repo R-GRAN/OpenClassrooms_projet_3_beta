@@ -53,7 +53,7 @@ async function postProjet(evt) {
       } else {
         // Si ok : Recupère les projets, actualise la galerie, ferme la modale
         getProjets()
-          .then((projets) => genererProjetsGallery(projets))
+          .then((projets) => genererGallery(projets))
           .then(closeModal(evt));
       }
     });
@@ -78,10 +78,10 @@ async function supprimerProjet(evt) {
       if (!res.ok) {
         (error) => console.log("error", error);
       } else {
-        // Si ok : Recupère les projets, actualise la gallery et la gallery de la modale
+        // Si ok : Recupère les projets, actualise la homepage et la gallery de la modale
         getProjets().then((projets) => {
-          genererProjetsModal(projets);
-          genererProjetsGallery(projets);
+          genererModal_1(projets);
+          genererGallery(projets);
         });
       }
     });
@@ -95,9 +95,11 @@ async function supprimerProjet(evt) {
 /* Gallery */
 
 /* Fonction generant la gallery */
-function genererProjetsGallery(projets) {
-  //efface le contenu de la gallery
+function genererGallery(projets) {
+  //recupere la gallery dans le DOM
   const sectionGallery = document.querySelector(".gallery");
+
+  //efface le contenu de la gallery
   resetGallery();
 
   //boucle les projets en parametre pour les integrer dans la gallery
@@ -123,13 +125,10 @@ function resetGallery() {
 
 /* Fonction generant la gallery au début du chargement de la page */
 async function initialiserPage() {
-  //filtre et affiche les projets selon le clic sur les filtres
-  handleBoutonsActive();
-
   //Appel API et affichage dans la gallery
   try {
     let projets = await getProjets();
-    genererProjetsGallery(projets);
+    genererGallery(projets);
   } catch (error) {
     console.log("error", error);
   }
@@ -137,25 +136,39 @@ async function initialiserPage() {
 
 /* Filtres */
 
+/* Function generant les boutons filtre par catégorie */
+function genererBtnFiltre() {
+  //recupere la div "filters" dans le DOM
+  const filters = document.getElementById("filters");
+
+  //boucle la variable categories
+  for (let category of categories) {
+    //cree un element input de type button avec sa valeur et ajoute sa classe
+    const btn_filters = document.createElement("input");
+    btn_filters.setAttribute("type", "button");
+    btn_filters.value = category.name;
+    btn_filters.classList.add("btn-filters");
+    //ajoute l'element au parent filters
+    filters.appendChild(btn_filters);
+  }
+}
+
 /* Fonction filtrant et affichant les projets dans la gallery selon le clic sur les filtres  */
 async function filtrerProjets(evt) {
   try {
-    //Appel API
+    //Appel API pour recuperer les projets
     let projets = await getProjets();
-
-    // efface la gallery
-    resetGallery();
 
     // si le clic a pour valeur "tous", affiche tous les projets dans la gallery
     if (evt.target.value === "Tous") {
-      genererProjetsGallery(projets);
+      genererGallery(projets);
     } else {
       // recupere les projets dont la categorie est egale à la valeur du clic
       const projetsFiltres = projets.filter(
         (projet) => projet.category.name === evt.target.value
       );
       // genère la gallery avec les projets filtrés
-      genererProjetsGallery(projetsFiltres);
+      genererGallery(projetsFiltres);
     }
   } catch (error) {
     console.log("error", error);
@@ -183,7 +196,7 @@ async function openModal(evt) {
 
   //recupere les projets et les affiche dans la modale
   let projets = await getProjets();
-  genererProjetsModal(projets);
+  genererModal_1(projets);
 
   //recupere la modale et l'affiche
   let target = document.querySelector(evt.target.getAttribute("href"));
@@ -204,7 +217,7 @@ async function openModal(evt) {
 function closeModal(evt) {
   evt.preventDefault();
   const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
-  //const form_select = document.querySelector(".form-select");
+
   //verification : si le status de la modale est null, ne rien faire
   if (modal === null) return;
 
@@ -221,7 +234,7 @@ function closeModal(evt) {
 
 /* Fonction gerant le retour de la modale */
 async function backModal() {
-  const projets = await getProjets();
+    const projets = await getProjets();
   const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
 
   //efface les valeurs du formulaire
@@ -229,11 +242,11 @@ async function backModal() {
   afficherImg();
 
   //genere la module
-  genererProjetsModal(projets);
+  genererModal_1(projets);
 }
 
 /* Fonction generant l'affichage stade 1 de la modale : Supprimer un projet */
-function genererProjetsModal(projets) {
+function genererModal_1(projets) {
   const modal_wrapper_gallery = document.querySelector(
     ".modal-wrapper-gallery"
   );
@@ -250,10 +263,6 @@ function genererProjetsModal(projets) {
   first_step.style.display = null;
   second_step.style.display = "none";
 
-  //attribue au bouton "Ajouter" la fonction qui affiche le second contenu
-  const modal_wrapper_btn = document.querySelector(".modal-wrapper-btn");
-  modal_wrapper_btn.addEventListener("click", genererModalAjouter);
-
   //vide la gallery de la modale
   modal_wrapper_gallery.innerHTML = "";
 
@@ -269,6 +278,7 @@ function genererProjetsModal(projets) {
     modal_wrapper_gallery.appendChild(figureModal);
     figureModal.appendChild(imageElement);
 
+    //cree l'icone poubelle et lui attibue l'id de projet
     const poubelle = document.createElement("i");
     poubelle.dataset.id = projet.id;
 
@@ -278,10 +288,14 @@ function genererProjetsModal(projets) {
     poubelle.classList.add("fa-solid", "fa-trash-can");
     figureModal.appendChild(poubelle);
   }
+
+  //attribue au bouton "Ajouter" la fonction qui affiche le second contenu
+  const modal_wrapper_btn = document.querySelector(".modal-wrapper-btn");
+  modal_wrapper_btn.addEventListener("click", genererModal_2);
 }
 
 /* Fonction generant l'affichage stade 2 de la modale : Ajouter un projet */
-async function genererModalAjouter() {
+async function genererModal_2() {
   const first_step = document.querySelector(".first-step");
   const second_step = document.querySelector(".second-step");
   const modal_back = document.querySelector(".modal-back");
@@ -311,14 +325,15 @@ async function genererModalAjouter() {
   modal_btn_valider.style.background = "#b3b3b3";
 
   //boucle les categories pour les mettre en options dans le select du formulaire
+  if (form_select.length === 1) {
+    for (let i = 0; i < categories.length; i++) {
+      let categorie = categories[i];
 
-  for (let i = 0; i < categories.length; i++) {
-    let categorie = categories[i];
-
-    let optionElement = document.createElement("option");
-    optionElement.innerText = categorie.name;
-    optionElement.value = categorie.id;
-    form_select.appendChild(optionElement);
+      let optionElement = document.createElement("option");
+      optionElement.innerText = categorie.name;
+      optionElement.value = categorie.id;
+      form_select.appendChild(optionElement);
+    }
   }
 
   //Ajoute la fonction qui permet de poster un projet lors du declenchement du submit
@@ -362,7 +377,7 @@ function handleBtnValider() {
 
 /* ------  Gestion Logout ------*/
 
-/* fonction permettant de se deconnecter en effacant le tooken */
+/* fonction permettant de se deconnecter en effacant le token */
 function logout() {
   localStorage.removeItem("token");
 }
@@ -376,24 +391,30 @@ async function storeCategories() {
     const categoriesValue = JSON.stringify(categories);
     window.localStorage.setItem("categories", categoriesValue);
   } else {
-    categories = await JSON.parse(categories);
+    categories = JSON.parse(categories);
   }
 }
 
+//recupere les projets de l'API et genère la gallery
 initialiserPage();
 
 let modal = null;
 let token = localStorage.getItem("token");
 let categories = window.localStorage.getItem("categories");
 
+//enregiste les categories dans le localstorage si ce n'est pas le cas
+storeCategories();
+
+//genere les boutons filtres
+genererBtnFiltre();
+//filtre et affiche les projets selon le clic sur les boutons filtres
+handleBoutonsActive();
+
 /* Si token Mode édition */
 
 if (token !== null) {
-  //enregiste les categories dans le localstorage si ce n'est pas le cas
-  storeCategories();
-
-  //modifie le lien login dans la nav en logout, la redirection et la fonction pour retirer le token
-  const log = document.getElementById("inAndOut");
+  //modifie le lien login dans la nav en logout, la redirection et retire le token au clic
+    const log = document.getElementById("loginAndOut");
   log.innerText = "logout";
   log.setAttribute("href", "index.html");
   log.addEventListener("click", logout);

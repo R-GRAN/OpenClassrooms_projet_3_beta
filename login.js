@@ -2,15 +2,18 @@
 
 /* Fonction permettant de se connecter */
 function login() {
+  //recupere le formulaire dans le DOM
   const formulaireLogin = document.querySelector(".formulaire-login");
+  //ajoute un preventDefault pour eviter de recharger la page
   formulaireLogin.addEventListener("submit", (evt) => {
     evt.preventDefault();
 
+    //recupere les valeurs des champs email et mot de passe du formulaire
     const authentifiant = {
       email: evt.target.querySelector("[name=email]").value,
       password: evt.target.querySelector("[name=password]").value,
     };
-
+    //formate les valeurs
     const chargeUtile = JSON.stringify(authentifiant);
 
     try {
@@ -20,17 +23,23 @@ function login() {
         body: chargeUtile,
       }).then((res) => {
         if (!res.ok) {
+          //retourne une erreur dans la console
           res.json().then((error) => console.log("error", error));
 
+          //recupere la div dans le DOM et affiche le message d'erreur durant 3,5 sec puis l'effacer
           let formError = document.getElementById("form-error");
+
           formError.innerHTML = "Erreur dans l’identifiant ou le mot de passe";
           setTimeout(() => {
             formError.innerHTML = "";
           }, 3550);
         } else {
+          // recupere la réponse et la formate
           res
             .json()
+            //enregistre le token dans le localStorage
             .then((data) => storeToken(data))
+            //redirige la page vers index.html
             .then((location.href = "index.html"));
         }
       });
