@@ -234,7 +234,7 @@ function closeModal(evt) {
 
 /* Fonction gerant le retour de la modale */
 async function backModal() {
-    const projets = await getProjets();
+  const projets = await getProjets();
   const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
 
   //efface les valeurs du formulaire
@@ -414,7 +414,7 @@ handleBoutonsActive();
 
 if (token !== null) {
   //modifie le lien login dans la nav en logout, la redirection et retire le token au clic
-    const log = document.getElementById("loginAndOut");
+  const log = document.getElementById("loginAndOut");
   log.innerText = "logout";
   log.setAttribute("href", "index.html");
   log.addEventListener("click", logout);

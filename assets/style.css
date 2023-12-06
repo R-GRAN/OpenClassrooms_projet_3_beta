@@ -169,10 +169,15 @@ nav ul {
   display: flex;
   align-items: center;
   list-style-type: none;
+  gap: 10px;
 }
 nav li {
   padding: 0 10px;
   font-size: 1.2em;
+}
+
+nav li img {
+  transform: scale(0.6);
 }
 
 nav li a {
