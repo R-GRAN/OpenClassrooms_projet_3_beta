@@ -288,7 +288,7 @@ input[type="submit"] {
   color: white;
   background-color: #1d6154;
   margin: 2em auto;
-  width: 180px;
+  min-width: 180px;
   text-align: center;
   border-radius: 60px;
 }
