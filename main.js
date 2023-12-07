@@ -387,31 +387,28 @@ function logout() {
 
 /* Script pour index.html */
 
-/* Fonction enregistrant les categories dans le sessionStorage */
-async function storeCategories() {
+/* Fonction enregistrant les categories dans le sessionStorage si ce n'est pas le cas et generant les boutons */
+async function handleBtnFiltre() {
   if (categories === null || categories === undefined) {
     categories = await getCategories();
     const categoriesValue = JSON.stringify(categories);
-    window.sessionStorage.setItem("categories", categoriesValue);
+    sessionStorage.setItem("categories", categoriesValue);
   } else {
     categories = JSON.parse(categories);
   }
+  genererBtnFiltre();
+  handleBoutonsActive();
 }
 
 //recupere les projets de l'API et genère la gallery
-initialiserPage();
 
 let modal = null;
 let token = localStorage.getItem("token");
 let categories = sessionStorage.getItem("categories");
 
-//enregiste les categories dans le sessionStorage si ce n'est pas le cas
-storeCategories();
-
-//genere les boutons filtres
-genererBtnFiltre();
-//filtre et affiche les projets selon le clic sur les boutons filtres
-handleBoutonsActive();
+initialiserPage();
+//enregiste les categories dans le sessionStorage  et gerant les boutons
+handleBtnFiltre();
 
 /* Si token Mode édition */
 
