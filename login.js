@@ -37,7 +37,7 @@ function login() {
           // recupere la réponse et la formate
           res
             .json()
-            //enregistre le token dans le localStorage
+            //enregistre le token dans le sessionStorage
             .then((data) => storeToken(data))
             //redirige la page vers index.html
             .then((location.href = "index.html"));
@@ -49,9 +49,9 @@ function login() {
   });
 }
 
-/* Fonction enregistrant le token dans le localStorage */
+/* Fonction enregistrant le token dans le sessionStorage */
 function storeToken(data) {
-  localStorage.setItem("token", JSON.stringify(data));
+  sessionStorage.setItem("token", JSON.stringify(data));
 }
 
 login();
