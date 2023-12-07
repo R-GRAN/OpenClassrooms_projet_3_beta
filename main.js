@@ -263,9 +263,10 @@ function closeModal() {
   //verification : si le status de la modale est null, ne rien faire
   if (modal === null) return;
 
-  //efface les valeurs du formulaire
+  //efface les valeurs du formulaire réinitalise le bouton "valider"
   modal_wrapper_form.reset();
   afficherImg();
+  handleBtnValider();
 
   //enleve la modale de l'ecran et met son statut à null
   modal.style.display = "none";
@@ -328,9 +329,6 @@ function genererModal(projets) {
   title.addEventListener("input", handleBtnValider);
   category.addEventListener("input", handleBtnValider);
 
-  // bouton "valider" en gris
-  modal_btn_valider.style.background = "#b3b3b3";
-
   //boucle les categories pour les mettre en options dans le select du formulaire
   for (let i = 0; i < categories.length; i++) {
     let categorie = categories[i];
@@ -343,6 +341,9 @@ function genererModal(projets) {
 
   //Ajoute la fonction qui permet de poster un projet lors du declenchement du submit
   modal_wrapper_form.addEventListener("submit", (evt) => postProjet(evt));
+
+  // bouton "valider" en gris
+  modal_btn_valider.style.background = "#b3b3b3";
 }
 
 /* Fonction gerant le comportement du bouton "ajouter" */
@@ -382,7 +383,6 @@ function afficherImg() {
 /* fonction gerant le comportement du bouton "valider" */
 function handleBtnValider() {
   const modal_btn_valider = document.getElementById("modal-btn-valider");
-
   //si les elements du formulaire sont définis : bouton "valider" activé et son background passe a sa couleur d'origine (vert)
   if (fileUpload.files[0] && title.value && category.value) {
     modal_btn_valider.disabled = false;
