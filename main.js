@@ -239,6 +239,8 @@ async function backModal() {
 
   //efface les valeurs du formulaire
   modal_wrapper_form.reset();
+
+  //affiche les details si l'input file ou l'image du projet à ajouter s'il y en a une
   afficherImg();
 
   //genere la module
@@ -313,19 +315,20 @@ async function genererModal_2() {
   // rend visible le bouton "back"
   modal_back.style.visibility = "visible";
 
-  // ecoute lorsqu'un fichier est saisi et affiche l'image du fichier
-  fileUpload.addEventListener("input", afficherImg);
-
-  //ecoute les elements du formulaire, active le bouton "valider" quand tous les elements sont remplis
-  fileUpload.addEventListener("input", handleBtnValider);
-  title.addEventListener("input", handleBtnValider);
-  category.addEventListener("input", handleBtnValider);
-
-  // bouton "valider" en gris
-  modal_btn_valider.style.background = "#b3b3b3";
-
-  //boucle les categories pour les mettre en options dans le select du formulaire
+  //si la longueur du select du formulaire ===1 (donc n'a pas été chargé)
   if (form_select.length === 1) {
+    // ecoute lorsqu'un fichier est saisi et affiche l'image du fichier
+    fileUpload.addEventListener("input", afficherImg);
+
+    //ecoute les elements du formulaire, active le bouton "valider" quand tous les elements sont remplis
+    fileUpload.addEventListener("input", handleBtnValider);
+    title.addEventListener("input", handleBtnValider);
+    category.addEventListener("input", handleBtnValider);
+
+    // bouton "valider" en gris
+    modal_btn_valider.style.background = "#b3b3b3";
+
+    //boucle les categories pour les mettre en options dans le select du formulaire
     for (let i = 0; i < categories.length; i++) {
       let categorie = categories[i];
 
@@ -334,10 +337,10 @@ async function genererModal_2() {
       optionElement.value = categorie.id;
       form_select.appendChild(optionElement);
     }
-  }
 
-  //Ajoute la fonction qui permet de poster un projet lors du declenchement du submit
-  modal_wrapper_form.addEventListener("submit", (evt) => postProjet(evt));
+    //Ajoute la fonction qui permet de poster un projet lors du declenchement du submit
+    modal_wrapper_form.addEventListener("submit", (evt) => postProjet(evt));
+  }
 }
 
 /* Fonction permettant d'afficher l'image du projet à ajouter*/
@@ -384,12 +387,12 @@ function logout() {
 
 /* Script pour index.html */
 
-/* Fonction enregistrant les categories dans le localStorage */
+/* Fonction enregistrant les categories dans le sessionStorage */
 async function storeCategories() {
-  if (categories === null) {
+  if (categories === null || categories === undefined) {
     categories = await getCategories();
     const categoriesValue = JSON.stringify(categories);
-    window.localStorage.setItem("categories", categoriesValue);
+    window.sessionStorage.setItem("categories", categoriesValue);
   } else {
     categories = JSON.parse(categories);
   }
@@ -400,9 +403,9 @@ initialiserPage();
 
 let modal = null;
 let token = localStorage.getItem("token");
-let categories = window.localStorage.getItem("categories");
+let categories = sessionStorage.getItem("categories");
 
-//enregiste les categories dans le localstorage si ce n'est pas le cas
+//enregiste les categories dans le sessionStorage si ce n'est pas le cas
 storeCategories();
 
 //genere les boutons filtres
