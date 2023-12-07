@@ -395,7 +395,7 @@ input[type="submit"]:hover {
   color: #fff;
   top: 5px;
   right: 5px;
-  scale: 0.8;
+  transform: scale(0.8);
 }
 
 .modal-wrapper-gallery img {
