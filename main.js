@@ -30,7 +30,6 @@ async function postProjet(evt) {
   const ParsedToken = JSON.parse(token);
 
   //recupère  le formulaire et ses valeurs
-  const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
   const image = document.getElementById("fileUpload").files[0];
   const title = document.getElementById("title").value;
   const category = document.getElementById("category").value;
@@ -52,13 +51,13 @@ async function postProjet(evt) {
       if (!res.ok) {
         res.json().then((error) => console.log("error", error));
       } else {
-        // Si ok : Recupère les projets, actualise les galeries, vide les champs et réinitialise le bouton "valider"
+        // Si ok : Recupère les projets, actualise les galeries, ferme la modale
         getProjets()
           .then((projets) => {
             genererModaleGallery(projets);
             genererGallery(projets);
           })
-          .then(modal_wrapper_form.reset(), afficherImg(), handleBtnValider());
+          .then(closeModal());
       }
     });
   } catch (error) {
