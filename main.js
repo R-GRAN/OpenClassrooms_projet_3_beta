@@ -136,21 +136,40 @@ async function initialiserPage() {
 
 /* Filtres */
 
-/* Function generant les boutons filtre par catégorie */
-function genererBtnFiltre() {
+/* Fonction enregistrant les categories dans le sessionStorage si ce n'est pas le cas et generant les boutons filtres */
+async function handleBtnFiltre() {
+  if (categories === null || categories === undefined) {
+    categories = await getCategories();
+    const categoriesValue = JSON.stringify(categories);
+    sessionStorage.setItem("categories", categoriesValue);
+  } else {
+    categories = JSON.parse(categories);
+  }
   //recupere la div "filters" dans le DOM
   const filters = document.getElementById("filters");
 
   //boucle la variable categories
   for (let category of categories) {
     //cree un element input de type button avec sa valeur et ajoute sa classe
-    const btn_filters = document.createElement("input");
+   const btn_filters = document.createElement("input"); 
     btn_filters.setAttribute("type", "button");
     btn_filters.value = category.name;
     btn_filters.classList.add("btn-filters");
     //ajoute l'element au parent filters
     filters.appendChild(btn_filters);
   }
+
+  //recupere tous les boutons filtres et ajoute le comportement lors du clic
+  const all_btns_filters = document.querySelectorAll(".btn-filters");
+  all_btns_filters.forEach((btn) =>
+    btn.addEventListener("click", (evt) => {
+      //ajoute la fonction pour filtrer et afficher les projets
+      filtrerProjets(evt);
+      //recupere le bouton avec la classe "active", lui enleve et l'attribue au bouton cliqué
+      document.querySelector(".active").classList.remove("active");
+      btn.classList.add("active");
+    })
+  );
 }
 
 /* Fonction filtrant et affichant les projets dans la gallery selon le clic sur les filtres  */
@@ -173,20 +192,6 @@ async function filtrerProjets(evt) {
   } catch (error) {
     console.log("error", error);
   }
-}
-
-/* Fonction attribuant et gerant le comportement des boutons filtres */
-function handleBoutonsActive() {
-  //recupere les boutons filtres et leurs ajoute la fonction pour filtrer et afficher les projets
-  const btns_filters = document.querySelectorAll(".btn-filters");
-  btns_filters.forEach((btn) =>
-    btn.addEventListener("click", (evt) => {
-      filtrerProjets(evt);
-      //recupere le bouton avec la classe "active", lui enleve et l'attribue au bouton cliqué
-      document.querySelector(".active").classList.remove("active");
-      btn.classList.add("active");
-    })
-  );
 }
 
 /* Modale */
@@ -297,7 +302,7 @@ function genererModal_1(projets) {
 }
 
 /* Fonction generant l'affichage stade 2 de la modale : Ajouter un projet */
-async function genererModal_2() {
+function genererModal_2() {
   const first_step = document.querySelector(".first-step");
   const second_step = document.querySelector(".second-step");
   const modal_back = document.querySelector(".modal-back");
@@ -386,19 +391,6 @@ function logout() {
 }
 
 /* Script pour index.html */
-
-/* Fonction enregistrant les categories dans le sessionStorage si ce n'est pas le cas et generant les boutons */
-async function handleBtnFiltre() {
-  if (categories === null || categories === undefined) {
-    categories = await getCategories();
-    const categoriesValue = JSON.stringify(categories);
-    sessionStorage.setItem("categories", categoriesValue);
-  } else {
-    categories = JSON.parse(categories);
-  }
-  genererBtnFiltre();
-  handleBoutonsActive();
-}
 
 //recupere les projets de l'API et genère la gallery
 
