@@ -29,7 +29,8 @@ async function postProjet(evt) {
   //parse le token pour pouvoir l'inclure dans le header
   const ParsedToken = JSON.parse(token);
 
-  //recupère les valeurs du formulaire
+  //recupère  le formulaire et ses valeurs
+  const modal_wrapper_form = document.querySelector(".modal-wrapper-form");
   const image = document.getElementById("fileUpload").files[0];
   const title = document.getElementById("title").value;
   const category = document.getElementById("category").value;
@@ -51,13 +52,13 @@ async function postProjet(evt) {
       if (!res.ok) {
         res.json().then((error) => console.log("error", error));
       } else {
-        // Si ok : Recupère les projets, actualise les galeries, ferme la modale
+        // Si ok : Recupère les projets, actualise les galeries, vide les champs et réinitialise le bouton "valider"
         getProjets()
           .then((projets) => {
             genererModaleGallery(projets);
             genererGallery(projets);
           })
-          .then(closeModal());
+          .then(modal_wrapper_form.reset(), afficherImg(), handleBtnValider());
       }
     });
   } catch (error) {
@@ -263,11 +264,9 @@ function closeModal() {
   //verification : si le status de la modale est null, ne rien faire
   if (modal === null) return;
 
-  //si le formulaire est défini, efface ses valeurs
-  if (modal_wrapper_form) {
-    modal_wrapper_form.reset();
-    afficherImg();
-  }
+  //efface les valeurs du formulaire
+  modal_wrapper_form.reset();
+  afficherImg();
 
   //enleve la modale de l'ecran et met son statut à null
   modal.style.display = "none";
