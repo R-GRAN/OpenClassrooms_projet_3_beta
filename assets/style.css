@@ -358,8 +358,10 @@ input[type="submit"]:hover {
   justify-content: space-between;
 }
 
-.modal-wrapper-nav span {
+.modal-wrapper-nav button {
   transform: scale(1.4);
+  background-color: transparent;
+  border: none;
 }
 
 .modal-wrapper-title {
