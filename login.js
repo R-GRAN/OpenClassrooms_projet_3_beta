@@ -23,9 +23,6 @@ function login() {
         body: chargeUtile,
       }).then((res) => {
         if (!res.ok) {
-          //retourne une erreur dans la console
-          res.json().then((error) => console.log("error", error));
-
           //recupere la div dans le DOM et affiche le message d'erreur durant 3,5 sec puis l'effacer
           let formError = document.getElementById("form-error");
 

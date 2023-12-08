@@ -40,29 +40,25 @@ async function postProjet(evt) {
   formData.append("title", title);
   formData.append("category", category);
 
-  try {
-    fetch("http://localhost:5678/api/works", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${ParsedToken.token}`,
-      },
-      body: formData,
-    }).then((res) => {
-      if (!res.ok) {
-        res.json().then((error) => console.log("error", error));
-      } else {
-        // Si ok : Recupère les projets, actualise les galeries, ferme la modale
-        getProjets()
-          .then((projets) => {
-            genererModaleGallery(projets);
-            genererGallery(projets);
-          })
-          .then(closeModal());
-      }
-    });
-  } catch (error) {
-    console.log("error", error);
-  }
+  fetch("http://localhost:5678/api/works", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${ParsedToken.token}`,
+    },
+    body: formData,
+  }).then((res) => {
+    if (!res.ok) {
+      res.json().then((error) => console.log("error", error));
+    } else {
+      // Si ok : Recupère les projets, actualise les galeries, ferme la modale
+      getProjets()
+        .then((projets) => {
+          genererModaleGallery(projets);
+          genererGallery(projets);
+        })
+        .then(closeModal());
+    }
+  });
 }
 
 /* Fonction permettant de supprimer un projet de l'API*/
@@ -73,24 +69,20 @@ async function supprimerProjet(evt) {
   //Parse le token pour l'inclure au header
   const ParsedToken = JSON.parse(token);
 
-  try {
-    fetch(`http://localhost:5678/api/works/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${ParsedToken.token}` },
-    }).then((res) => {
-      if (!res.ok) {
-        (error) => console.log("error", error);
-      } else {
-        // Si ok : Recupère les projets, actualise les galeries
-        getProjets().then((projets) => {
-          genererModaleGallery(projets);
-          genererGallery(projets);
-        });
-      }
-    });
-  } catch (error) {
-    console.log("error", error);
-  }
+  fetch(`http://localhost:5678/api/works/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${ParsedToken.token}` },
+  }).then((res) => {
+    if (!res.ok) {
+      (error) => console.log("error", error);
+    } else {
+      // Si ok : Recupère les projets, actualise les galeries
+      getProjets().then((projets) => {
+        genererModaleGallery(projets);
+        genererGallery(projets);
+      });
+    }
+  });
 }
 
 /* ------  Gestion de contenu ------*/
@@ -111,8 +103,8 @@ async function initialiserPage() {
     categories = JSON.parse(categories);
   }
 
-  //genere les boutons
-  handleBtnFiltre();
+  //genere les boutons filtre
+  genererBtnFiltre();
 
   //genere la modale
   genererModal(projets);
@@ -179,9 +171,17 @@ function genererModaleGallery(projets) {
 
 /* Filtres */
 /* Fonction generant les boutons filtres */
-function handleBtnFiltre() {
+function genererBtnFiltre() {
   //recupere la div "filters" dans le DOM
   const filters = document.getElementById("filters");
+
+  //cree le button avec "Tous" avec sa valeur et ajoute ses classes
+  const btn_filters = document.createElement("input");
+  btn_filters.setAttribute("type", "button");
+  btn_filters.value = "Tous";
+  btn_filters.classList.add("btn-filters", "active");
+  //ajoute l'element au parent filters
+  filters.appendChild(btn_filters);
 
   //boucle la variable categories
   for (let category of categories) {
