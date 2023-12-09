@@ -329,6 +329,12 @@ function genererModal(projets) {
   title.addEventListener("input", handleBtnValider);
   category.addEventListener("input", handleBtnValider);
 
+  //cree l'option vide dans le select du formulaire
+  let optionElement = document.createElement("option");
+  optionElement.innerText = "";
+  optionElement.value = "";
+  form_select.appendChild(optionElement);
+
   //boucle les categories pour les mettre en options dans le select du formulaire
   for (let i = 0; i < categories.length; i++) {
     let categorie = categories[i];
