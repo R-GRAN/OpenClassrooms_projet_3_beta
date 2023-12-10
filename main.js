@@ -1,3 +1,7 @@
+let modal;
+let categories;
+let token = sessionStorage.getItem("token");
+
 /* ------ Appels API  ------*/
 
 /* Fonction recuperant les projets de l'API */
@@ -368,7 +372,7 @@ function genererModal(projets) {
 
 /* Fonction gerant le comportement du bouton "ajouter" */
 function changeStep() {
-  //affiche le premier contenu de la modale et enleve le second
+  //enleve le premier contenu de la modale et affiche le second
   const first_step = document.querySelector(".first-step");
   const second_step = document.querySelector(".second-step");
 
@@ -413,12 +417,6 @@ function handleBtnValider() {
     modal_btn_valider.style.background = "#A7A7A7";
   }
 }
-
-/* Script pour index.html */
-
-let modal = null;
-let token = sessionStorage.getItem("token");
-let categories = null;
 
 //genère le contenu
 initialiserPage();
