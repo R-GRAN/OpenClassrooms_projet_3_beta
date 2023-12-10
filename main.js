@@ -94,20 +94,37 @@ async function initialiserPage() {
   let projets = await getProjets();
   genererGallery(projets);
 
-  //enregistre les categories dans le sessionStorage si ce n'est pas le cas
-  if (categories === null || categories === undefined) {
-    categories = await getCategories();
-    const categoriesValue = JSON.stringify(categories);
-    sessionStorage.setItem("categories", categoriesValue);
-  } else {
-    categories = JSON.parse(categories);
+  //Appel API recupere les categories dans le scope global
+  categories = await getCategories();
+
+  /* Si aucun token */
+  // genere les boutons filtre
+  if (token === null || token === undefined) genererBtnFiltre();
+  else {
+    /* Mode édition */
+
+    //modifie le lien login dans la nav en logout, la redirection et retire le token au clic
+    const log = document.getElementById("loginAndOut");
+    log.innerText = "logout";
+    log.setAttribute("href", "index.html");
+    log.addEventListener("click", sessionStorage.removeItem("token"));
+
+    //affiche la bannière du mode édition
+    const banner = document.getElementById("editor-banner");
+    banner.style.display = "flex";
+
+    //enleve les filtres
+    const filters = document.getElementById("filters");
+    filters.style.display = "none";
+
+    //genere la modale
+    genererModal(projets);
+
+    // affiche le lien d'accès à la modale
+    const modal_link = document.querySelector(".modal-link");
+    modal_link.style.display = null;
+    modal_link.addEventListener("click", openModal);
   }
-
-  //genere les boutons filtre
-  genererBtnFiltre();
-
-  //genere la modale
-  genererModal(projets);
 }
 
 /* Galleries */
@@ -290,7 +307,7 @@ function backModal() {
   first_step.style.display = null;
   second_step.style.display = "none";
 
-  // cache le bouton "back" et lui attribut sa fonction
+  // cache le bouton "back"
   modal_back.style.visibility = "hidden";
 }
 
@@ -400,41 +417,11 @@ function handleBtnValider() {
   }
 }
 
-/* ------  Gestion Logout ------*/
-
-/* fonction permettant de se deconnecter en effacant le token */
-function logout() {
-  sessionStorage.removeItem("token");
-}
-
 /* Script pour index.html */
 
 let modal = null;
 let token = sessionStorage.getItem("token");
-let categories = sessionStorage.getItem("categories");
+let categories = null;
 
-//recupere les projets de l'API et genère la gallery
+//genère le contenu
 initialiserPage();
-
-/* Si token Mode édition */
-
-if (token !== null) {
-  //modifie le lien login dans la nav en logout, la redirection et retire le token au clic
-  const log = document.getElementById("loginAndOut");
-  log.innerText = "logout";
-  log.setAttribute("href", "index.html");
-  log.addEventListener("click", logout);
-
-  //affiche la bannière du mode édition
-  const banner = document.getElementById("editor-banner");
-  banner.style.display = "flex";
-
-  //enleve les filtres
-  const filters = document.getElementById("filters");
-  filters.style.display = "none";
-
-  // affiche le lien d'accès à la modale
-  const modal_link = document.querySelector(".modal-link");
-  modal_link.style.display = null;
-  modal_link.addEventListener("click", openModal);
-}

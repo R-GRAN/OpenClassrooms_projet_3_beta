@@ -23,7 +23,7 @@ function login() {
         body: chargeUtile,
       }).then((res) => {
         if (!res.ok) {
-          //recupere la div dans le DOM et affiche le message d'erreur durant 3,5 sec puis l'effacer
+          //recupere la div dans le DOM et affiche le message d'erreur durant 3,5 sec puis l'efface
           let formError = document.getElementById("form-error");
 
           formError.innerHTML = "Erreur dans l’identifiant ou le mot de passe";
@@ -35,7 +35,7 @@ function login() {
           res
             .json()
             //enregistre le token dans le sessionStorage
-            .then((data) => storeToken(data))
+            .then((data) => sessionStorage.setItem("token", JSON.stringify(data)))
             //redirige la page vers index.html
             .then((location.href = "index.html"));
         }
@@ -44,11 +44,6 @@ function login() {
       console.log("error", error);
     }
   });
-}
-
-/* Fonction enregistrant le token dans le sessionStorage */
-function storeToken(data) {
-  sessionStorage.setItem("token", JSON.stringify(data));
 }
 
 login();
