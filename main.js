@@ -98,10 +98,11 @@ async function initialiserPage() {
   categories = await getCategories();
 
   /* Si aucun token */
-  // genere les boutons filtre
-  if (token === null || token === undefined) genererBtnFiltre();
+  if (token === null || token === undefined)
+    // genere les boutons filtre
+    genererBtnFiltre();
   else {
-    /* Mode édition */
+    /* sinon : Mode édition */
 
     //modifie le lien login dans la nav en logout, la redirection et retire le token au clic
     const log = document.getElementById("loginAndOut");
@@ -112,10 +113,6 @@ async function initialiserPage() {
     //affiche la bannière du mode édition
     const banner = document.getElementById("editor-banner");
     banner.style.display = "flex";
-
-    //enleve les filtres
-    const filters = document.getElementById("filters");
-    filters.style.display = "none";
 
     //genere la modale
     genererModal(projets);
