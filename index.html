@@ -35,7 +35,7 @@
           <ul>
             <li><a href="#portfolio">projets</a></li>
             <li><a href="#contact">contact</a></li>
-            <li><a id="loginAndOut" href="form.html">login</a></li>
+            <li><a id="loginAndOut" href="login.html">login</a></li>
             <li>
               <img src="./assets/icons/instagram.png" alt="Instagram" />
             </li>
@@ -103,16 +103,16 @@
               <div class="second-step">
                 <h3 class="modal-wrapper-title">Ajout photo</h3>
                 <form action="#" method="post" class="modal-wrapper-form">
-                  <label for="fileUpload">
-                    <div class="input-area">
-                      <div class="input-details">
+                  <div class="input-area">
+                    <label for="fileUpload">
+                      <span class="input-details">
                         <i class="fa-regular fa-image"></i>
                         <span class="btn">+ Ajouter photo</span>
                         <span>jpg, png : 4mo max</span>
-                      </div>
-                      <div id="uploadedImageDiv"></div>
-                    </div>
-                  </label>
+                      </span>
+                      <span id="uploadedImage-area"></span>
+                    </label>
+                  </div>
                   <input
                     type="file"
                     name="fileUpload"

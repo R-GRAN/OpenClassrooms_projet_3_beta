@@ -388,19 +388,19 @@ function changeStep() {
 function afficherImg() {
   const imgToProcess = document.getElementById("fileUpload");
   const input_details = document.querySelector(".input-details ");
-  const uploadedImageDiv = document.getElementById("uploadedImageDiv");
+  const uploadedImage_area = document.getElementById("uploadedImage-area");
 
   //si aucun fichier : vider la zone d'affichage du fichier et afficher la zone explicative
   if (imgToProcess.files[0] === undefined) {
-    uploadedImageDiv.innerHTML = null;
+    uploadedImage_area.innerHTML = null;
     input_details.style.display = null;
   } else {
     // si fichier chargé : créer une nouvelle image, enlever la zone explicative et afficher une image du fichier
     let newImage = new Image();
     newImage.src = URL.createObjectURL(imgToProcess.files[0]);
     input_details.style.display = "none";
-    uploadedImageDiv.innerHTML = null;
-    uploadedImageDiv.appendChild(newImage);
+    uploadedImage_area.innerHTML = null;
+    uploadedImage_area.appendChild(newImage);
   }
 }
 

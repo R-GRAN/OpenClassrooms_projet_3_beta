@@ -253,6 +253,8 @@ nav li a:hover {
 
 .gallery img {
   width: 100%;
+  height: 487px;
+  margin-bottom: 7px;
 }
 #contact {
   width: 50%;
@@ -379,7 +381,7 @@ input[type="submit"]:hover {
   grid-row-gap: 20px;
   margin: 2em auto;
   padding: 0 20px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .modal-wrapper-gallery figure {
@@ -402,6 +404,8 @@ input[type="submit"]:hover {
 
 .modal-wrapper-gallery img {
   width: 100%;
+  height: 101.75px;
+  object-fit: cover;
 }
 
 .modal-wrapper-bar {
@@ -452,14 +456,16 @@ input[type="submit"]:hover {
   margin-top: 10px;
 }
 
-#uploadedImageDiv {
+#uploadedImage-area {
+  display: block;
   margin: auto;
   width: 129px;
 }
 
-#uploadedImageDiv img {
+#uploadedImage-area img {
   width: 100%;
-  max-height: 169px;
+  height: 169px;
+  object-fit: cover;
 }
 
 .modal-wrapper-form-el {
@@ -518,5 +524,3 @@ form > span {
   height: 60px;
   width: 100%;
 }
-
-/* ajout  */
