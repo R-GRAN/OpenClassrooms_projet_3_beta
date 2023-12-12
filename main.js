@@ -44,25 +44,29 @@ async function postProjet(evt) {
   formData.append("title", title);
   formData.append("category", category);
 
-  fetch("http://localhost:5678/api/works", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${ParsedToken.token}`,
-    },
-    body: formData,
-  }).then((res) => {
-    if (!res.ok) {
-      res.json().then((error) => console.log("error", error));
-    } else {
-      // Si ok : Recupère les projets, actualise les galeries, ferme la modale
-      getProjets()
-        .then((projets) => {
-          genererModaleGallery(projets);
-          genererGallery(projets);
-        })
-        .then(closeModal());
-    }
-  });
+  try {
+    fetch("http://localhost:5678/api/works", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${ParsedToken.token}`,
+      },
+      body: formData,
+    }).then((res) => {
+      if (!res.ok) {
+        res.json().then((error) => console.log("error", error));
+      } else {
+        // Si ok : Recupère les projets, actualise les galeries, ferme la modale
+        getProjets()
+          .then((projets) => {
+            genererModaleGallery(projets);
+            genererGallery(projets);
+          })
+          .then(closeModal());
+      }
+    });
+  } catch (error) {
+    console.log("error", error);
+  }
 }
 
 /* Fonction permettant de supprimer un projet de l'API*/
@@ -73,7 +77,8 @@ async function supprimerProjet(evt) {
   //Parse le token pour l'inclure au header
   const ParsedToken = JSON.parse(token);
 
-  fetch(`http://localhost:5678/api/works/${id}`, {
+  try {
+      fetch(`http://localhost:5678/api/works/${id}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${ParsedToken.token}` },
   }).then((res) => {
@@ -87,6 +92,10 @@ async function supprimerProjet(evt) {
       });
     }
   });
+  } catch (error) {
+    console.log("error", error);
+  }
+
 }
 
 /* ------  Gestion de contenu ------*/
